@@ -1,3 +1,5 @@
+// +build ignore
+
 package scaleway
 
 import (
@@ -35,7 +37,7 @@ func testAccCheckScalewayUserDataExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("Not found: %s", n)
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway
+		client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
 		_, err := client.GetUserdata(rs.Primary.Attributes["server"], rs.Primary.Attributes["key"], false)
 
 		if err != nil {
@@ -47,10 +49,10 @@ func testAccCheckScalewayUserDataExists(n string) resource.TestCheckFunc {
 }
 
 func testAccCheckScalewayUserDataDestroy(s *terraform.State) error {
-	client := testAccProvider.Meta().(*Client).scaleway
+	client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "scaleway" {
+		if rs.Type != "scaleway_DEPRECATED" {
 			continue
 		}
 

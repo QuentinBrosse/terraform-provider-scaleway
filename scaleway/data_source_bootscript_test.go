@@ -1,3 +1,5 @@
+// +build ignore
+
 package scaleway
 
 import (
@@ -36,7 +38,7 @@ func testAccCheckBootscriptID(n string) resource.TestCheckFunc {
 			return fmt.Errorf("bootscript data source ID not set")
 		}
 
-		scaleway := testAccProvider.Meta().(*Client).scaleway
+		scaleway := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
 		_, err := scaleway.GetBootscript(rs.Primary.ID)
 		if err != nil {
 			return err

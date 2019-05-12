@@ -1,3 +1,5 @@
+// +build ignore
+
 package scaleway
 
 import (
@@ -22,7 +24,7 @@ func testSweepSecurityGroup(region string) error {
 		return fmt.Errorf("error getting client: %s", err)
 	}
 
-	scaleway := client.(*Client).scaleway
+	scaleway := client.(*Client).scaleway_DEPRECATED
 	log.Printf("[DEBUG] Destroying the security groups in (%s)", region)
 
 	sgs, err := scaleway.GetSecurityGroups()
@@ -91,10 +93,10 @@ func TestAccScalewaySecurityGroup_Stateful(t *testing.T) {
 }
 
 func testAccCheckScalewaySecurityGroupDestroy(s *terraform.State) error {
-	client := testAccProvider.Meta().(*Client).scaleway
+	client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "scaleway" {
+		if rs.Type != "scaleway_DEPRECATED" {
 			continue
 		}
 
@@ -115,7 +117,7 @@ func testAccCheckScalewaySecurityGroupAttributes(n string) resource.TestCheckFun
 			return fmt.Errorf("Unknown resource: %s", n)
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway
+		client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
 		group, err := client.GetSecurityGroup(rs.Primary.ID)
 		if err != nil {
 			return err
@@ -144,7 +146,7 @@ func testAccCheckScalewaySecurityGroupExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("No Security Group ID is set")
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway
+		client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
 		group, err := client.GetSecurityGroup(rs.Primary.ID)
 
 		if err != nil {

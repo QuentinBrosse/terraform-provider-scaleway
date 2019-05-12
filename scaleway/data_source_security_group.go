@@ -1,3 +1,5 @@
+// +build ignore
+
 package scaleway
 
 import (
@@ -30,7 +32,7 @@ func dataSourceScalewaySecurityGroup() *schema.Resource {
 	}
 }
 func dataSourceScalewaySecurityGroupRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*Client).scaleway
+	client := m.(*Client).scaleway_DEPRECATED
 
 	groups, err := client.GetSecurityGroups()
 	if err != nil {

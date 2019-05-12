@@ -1,3 +1,5 @@
+// +build ignore
+
 package scaleway
 
 import (
@@ -22,7 +24,7 @@ func testSweepVolume(region string) error {
 		return fmt.Errorf("error getting client: %s", err)
 	}
 
-	scaleway := client.(*Client).scaleway
+	scaleway := client.(*Client).scaleway_DEPRECATED
 	log.Printf("[DEBUG] Destroying the volumes in (%s)", region)
 
 	volumes, err := scaleway.GetVolumes()
@@ -57,10 +59,10 @@ func TestAccScalewayVolume_Basic(t *testing.T) {
 }
 
 func testAccCheckScalewayVolumeDestroy(s *terraform.State) error {
-	client := testAccProvider.Meta().(*Client).scaleway
+	client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "scaleway" {
+		if rs.Type != "scaleway_DEPRECATED" {
 			continue
 		}
 
@@ -81,7 +83,7 @@ func testAccCheckScalewayVolumeAttributes(n string) resource.TestCheckFunc {
 			return fmt.Errorf("Unknown resource: %s", n)
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway
+		client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
 		volume, err := client.GetVolume(rs.Primary.ID)
 
 		if err != nil {
@@ -114,7 +116,7 @@ func testAccCheckScalewayVolumeExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("No Volume ID is set")
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway
+		client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
 		volume, err := client.GetVolume(rs.Primary.ID)
 
 		if err != nil {

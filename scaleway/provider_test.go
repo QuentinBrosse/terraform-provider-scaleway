@@ -1,12 +1,10 @@
 package scaleway
 
 import (
-	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
-	homedir "github.com/mitchellh/go-homedir"
 )
 
 var testAccProviders map[string]terraform.ResourceProvider
@@ -26,26 +24,18 @@ func TestProvider(t *testing.T) {
 }
 
 func TestProvider_impl(t *testing.T) {
-	var _ terraform.ResourceProvider = Provider()
+	var _ = Provider()
+	testAccPreCheck(t)
 }
 
 func testAccPreCheck(t *testing.T) {
-	if v := os.Getenv("SCALEWAY_ORGANIZATION"); v == "" {
-		if path, err := homedir.Expand("~/.scwrc"); err == nil {
-			scwAPIKey, scwOrganization, err := readScalewayConfig(path)
-			if err != nil {
-				t.Fatalf("failed falling back to %s: %v", path, err)
-			}
-			if scwAPIKey == "" && scwOrganization == "" {
-				t.Fatal("SCALEWAY_TOKEN must be set for acceptance tests")
-			}
-			return
-		}
-		t.Fatal("SCALEWAY_ORGANIZATION must be set for acceptance tests")
+	if ak, exist := scwConfig.GetSecretKey(); !exist {
+		t.Logf(">>>> %s\n", ak)
+		t.Fatal("the Scaleway token must be set for acceptance tests.")
 	}
-	tokenFromAccessKey := os.Getenv("SCALEWAY_ACCESS_KEY")
-	token := os.Getenv("SCALEWAY_TOKEN")
-	if token == "" && tokenFromAccessKey == "" {
-		t.Fatal("SCALEWAY_TOKEN must be set for acceptance tests")
+
+	if oi, exist := scwConfig.GetDefaultOrganizationID(); !exist {
+		t.Logf(">>>> %s\n", oi)
+		t.Fatal("the Scaleway organization ID must be set for acceptance tests.")
 	}
 }

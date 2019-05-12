@@ -1,8 +1,16 @@
+// +build ignore
+
 package scaleway
 
 import (
 	"fmt"
 	"log"
+	"os"
+	"sort"
+
+	"github.com/scaleway/scaleway-sdk-go/scw"
+
+	"github.com/scaleway/scaleway-sdk-go/api/instance/v1"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
@@ -143,7 +151,7 @@ func resourceScalewayServer() *schema.Resource {
 			"state_detail": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "scaleway description of the server state",
+				Description: "scaleway_DEPRECATED description of the server state",
 			},
 		},
 	}
@@ -164,7 +172,7 @@ func attachIP(scaleway *api.API, serverID, IPAddress string) error {
 }
 
 func resourceScalewayServerCreate(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	image := d.Get("image").(string)
 	var req = api.ServerDefinition{
@@ -264,7 +272,7 @@ func resourceScalewayServerCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScalewayServerRead(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	server, err := scaleway.GetServer(d.Id())
 	if err != nil {
@@ -312,7 +320,7 @@ func resourceScalewayServerRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScalewayServerUpdate(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	var req api.ServerPatchDefinition
 	if d.HasChange("name") {
@@ -353,7 +361,7 @@ func resourceScalewayServerUpdate(d *schema.ResourceData, m interface{}) error {
 	err := scaleway.PatchServer(d.Id(), req)
 
 	if err != nil {
-		return fmt.Errorf("Failed patching scaleway server: %q", err)
+		return fmt.Errorf("Failed patching scaleway_DEPRECATED server: %q", err)
 	}
 
 	if d.HasChange("public_ip") {
@@ -388,7 +396,7 @@ func resourceScalewayServerUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScalewayServerDelete(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	s, err := scaleway.GetServer(d.Id())
 	if err != nil {
@@ -405,4 +413,28 @@ func resourceScalewayServerDelete(d *schema.ResourceData, m interface{}) error {
 	}
 
 	return err
+}
+
+// fetchServerAvailabilities fetch known scaleway server types to support validation in r/server
+func fetchServerAvailabilities(client *scw.Client) error {
+	// TODO: add documentation for DISABLE_SCALEWAY_SERVER_TYPE_VALIDATION
+	_, disableTypeValivation := os.LookupEnv("DISABLE_SCALEWAY_SERVER_TYPE_VALIDATION")
+
+	if disableTypeValivation || len(commercialServerTypes) > 0 {
+		return nil
+	}
+
+	instanceAPI := instance.NewApi(client)
+	res, err := instanceAPI.GetServerTypesAvailability(&instance.GetServerTypesAvailabilityRequest{})
+	if err != nil {
+		return fmt.Errorf("error: cannot fetch server availabilities: %s", err)
+	}
+
+	commercialServerTypes = make([]string, 0, len(res.Servers))
+	for k := range res.Servers {
+		commercialServerTypes = append(commercialServerTypes, k)
+	}
+	sort.StringSlice(commercialServerTypes).Sort()
+
+	return nil
 }

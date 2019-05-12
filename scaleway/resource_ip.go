@@ -1,3 +1,5 @@
+// +build ignore
+
 package scaleway
 
 import (
@@ -41,7 +43,7 @@ func resourceScalewayIP() *schema.Resource {
 }
 
 func resourceScalewayIPCreate(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	ip, err := scaleway.CreateIP()
 	if err != nil {
@@ -53,7 +55,7 @@ func resourceScalewayIPCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScalewayIPRead(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	ip, err := scaleway.GetIP(d.Id())
 	if err != nil {
@@ -79,7 +81,7 @@ func resourceScalewayIPRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScalewayIPUpdate(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	if d.HasChange("reverse") {
 		log.Printf("[DEBUG] Updating IP %q reverse to %q\n", d.Id(), d.Get("reverse").(string))
@@ -108,7 +110,7 @@ func resourceScalewayIPUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScalewayIPDelete(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	err := scaleway.DeleteIP(d.Id())
 	if err != nil {

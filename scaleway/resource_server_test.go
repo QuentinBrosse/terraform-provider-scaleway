@@ -1,3 +1,5 @@
+// +build ignore
+
 package scaleway
 
 import (
@@ -22,7 +24,7 @@ func testSweepServer(region string) error {
 		return fmt.Errorf("error getting client: %s", err)
 	}
 
-	scaleway := client.(*Client).scaleway
+	scaleway := client.(*Client).scaleway_DEPRECATED
 	log.Printf("[DEBUG] Destroying the servers in (%s)", region)
 
 	servers, err := scaleway.GetServers(true, 0)
@@ -186,10 +188,10 @@ func TestAccScalewayServer_SecurityGroup(t *testing.T) {
 }
 
 func testAccCheckScalewayServerDestroy(s *terraform.State) error {
-	client := testAccProvider.Meta().(*Client).scaleway
+	client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "scaleway" {
+		if rs.Type != "scaleway_DEPRECATED" {
 			continue
 		}
 
@@ -215,7 +217,7 @@ func testAccCheckScalewayServerIPAttachmentAttributes(ipName, serverName string)
 			return fmt.Errorf("Unknown scaleway_server resource: %s", serverName)
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway
+		client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
 
 		ip, err := client.GetIP(rs.Primary.ID)
 		if err != nil {
@@ -236,7 +238,7 @@ func testAccCheckScalewayServerIPDetachmentAttributes(n string) resource.TestChe
 			return fmt.Errorf("Unknown resource: %s", n)
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway
+		client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
 		server, err := client.GetServer(rs.Primary.ID)
 		if err != nil {
 			return err
@@ -256,7 +258,7 @@ func testAccCheckScalewayServerSecurityGroup(n, securityGroupName string) resour
 			return fmt.Errorf("Unknown resource: %s", n)
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway
+		client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
 		server, err := client.GetServer(rs.Primary.ID)
 
 		if err != nil {
@@ -283,7 +285,7 @@ func testAccCheckScalewayServerExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("No Server ID is set")
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway
+		client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
 		server, err := client.GetServer(rs.Primary.ID)
 
 		if err != nil {

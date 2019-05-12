@@ -1,3 +1,5 @@
+// +build ignore
+
 package scaleway
 
 import (
@@ -22,7 +24,7 @@ func testSweepBucket(region string) error {
 		return fmt.Errorf("error getting client: %s", err)
 	}
 
-	scaleway := client.(*Client).scaleway
+	scaleway := client.(*Client).scaleway_DEPRECATED
 	log.Printf("[DEBUG] Destroying the buckets in (%s)", region)
 
 	containers, err := scaleway.GetContainers()
@@ -56,10 +58,10 @@ func TestAccScalewayBucket(t *testing.T) {
 }
 
 func testAccCheckScalewayBucketDestroy(s *terraform.State) error {
-	client := testAccProvider.Meta().(*Client).scaleway
+	client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "scaleway" {
+		if rs.Type != "scaleway_DEPRECATED" {
 			continue
 		}
 

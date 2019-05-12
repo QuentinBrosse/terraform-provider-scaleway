@@ -1,3 +1,5 @@
+// +build ignore
+
 package scaleway
 
 import (
@@ -54,7 +56,7 @@ func resourceScalewayVolume() *schema.Resource {
 }
 
 func resourceScalewayVolumeCreate(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	size := uint64(d.Get("size_in_gb").(int)) * gb
 	req := api.VolumeDefinition{
@@ -72,7 +74,7 @@ func resourceScalewayVolumeCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScalewayVolumeRead(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 	volume, err := scaleway.GetVolume(d.Id())
 	if err != nil {
 		if serr, ok := err.(api.APIError); ok {
@@ -97,7 +99,7 @@ func resourceScalewayVolumeRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScalewayVolumeUpdate(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	var req api.VolumePutDefinition
 	if d.HasChange("name") {
@@ -114,7 +116,7 @@ func resourceScalewayVolumeUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScalewayVolumeDelete(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	err := scaleway.DeleteVolume(d.Id())
 	if err != nil {

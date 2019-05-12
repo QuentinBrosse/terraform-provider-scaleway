@@ -1,3 +1,5 @@
+// +build ignore
+
 package scaleway
 
 import (
@@ -38,7 +40,7 @@ func getSSHKeyFingerprint(key []byte) (string, error) {
 }
 
 func resourceScalewaySSHKeyCreate(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	fingerprint, err := getSSHKeyFingerprint([]byte(d.Get("key").(string)))
 	if err != nil {
@@ -80,7 +82,7 @@ func resourceScalewaySSHKeyCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScalewaySSHKeyRead(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	user, err := scaleway.GetUser()
 	if err != nil {
@@ -103,7 +105,7 @@ func resourceScalewaySSHKeyRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScalewaySSHKeyDelete(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	user, err := scaleway.GetUser()
 	if err != nil {

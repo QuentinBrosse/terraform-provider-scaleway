@@ -1,99 +1,68 @@
 package scaleway
 
 import (
-	"bytes"
 	"context"
-	"io"
-	"io/ioutil"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"sort"
 	"time"
 
 	retryablehttp "github.com/hashicorp/go-retryablehttp"
 	"github.com/hashicorp/terraform/helper/logging"
-	sdk "github.com/nicolai86/scaleway-sdk"
+	"github.com/scaleway/scaleway-sdk-go/scw"
+	"github.com/scaleway/scaleway-sdk-go/scwconfig"
 )
 
-// Config contains scaleway configuration values
-type Config struct {
-	Organization string
-	APIKey       string
-	Region       string
+var scwConfig scwconfig.Config
+
+func init() {
+	config, err := scwconfig.Load()
+	if err != nil {
+		log.Fatalf("error: cannot load configuration: %s", err)
+	}
+	scwConfig = config
 }
 
-// Client contains scaleway api clients
-type Client struct {
-	scaleway *sdk.API
+type Meta struct {
+	client *scw.Client
 }
 
-// client is a bridge between sdk.HTTPClient interface and retryablehttp.Client
-type client struct {
-	*retryablehttp.Client
-}
+func NewMeta() (*Meta, error) {
+	cl := retryablehttp.NewClient()
 
-func (c *client) Do(r *http.Request) (*http.Response, error) {
-	var body io.ReadSeeker
-	if r.Body != nil {
-		bs, err := ioutil.ReadAll(r.Body)
+	cl.HTTPClient.Transport = logging.NewTransport("Scaleway", cl.HTTPClient.Transport)
+	cl.RetryMax = 3
+	cl.RetryWaitMax = 2 * time.Minute
+	cl.Logger = log.New(os.Stderr, "", 0)
+	cl.RetryWaitMin = time.Minute
+	cl.CheckRetry = func(_ context.Context, resp *http.Response, err error) (bool, error) {
+		if resp == nil {
+			return true, err
+		}
+		if resp.StatusCode == http.StatusTooManyRequests {
+			return true, err
+		}
+		return retryablehttp.DefaultRetryPolicy(context.TODO(), resp, err)
+	}
+
+	// TODO: Use retryablehttp client here
+	client, err := scw.NewClient(scw.WithConfig(scwConfig), scw.WithHTTPClient(cl.HTTPClient))
+	if err != nil {
+		return nil, fmt.Errorf("error: cannot create SDK client: %s", err)
+	}
+
+	config := &Meta{
+		client: client,
+	}
+
+	// TODO: Uncomment me when server resource will be implemented.
+	/*
+		err = fetchServerAvailabilities(client)
 		if err != nil {
-			return nil, err
+			log.Printf("error: cannot fetch server availabilities: %s", err)
 		}
-		body = bytes.NewReader(bs)
-	}
-	req, err := retryablehttp.NewRequest(r.Method, r.URL.String(), body)
-	for key, val := range r.Header {
-		req.Header.Set(key, val[0])
-	}
-	if err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
+	*/
 
-// Client configures and returns a fully initialized Scaleway client
-func (c *Config) Client() (*Client, error) {
-	options := func(sdkApi *sdk.API) {
-		cl := retryablehttp.NewClient()
-
-		cl.HTTPClient.Transport = logging.NewTransport("Scaleway", cl.HTTPClient.Transport)
-		cl.RetryMax = 3
-		cl.RetryWaitMax = 2 * time.Minute
-		cl.Logger = log.New(os.Stderr, "", 0)
-		cl.RetryWaitMin = time.Minute
-		cl.CheckRetry = func(_ context.Context, resp *http.Response, err error) (bool, error) {
-			if resp == nil {
-				return true, err
-			}
-			if resp.StatusCode == http.StatusTooManyRequests {
-				return true, err
-			}
-			return retryablehttp.DefaultRetryPolicy(context.TODO(), resp, err)
-		}
-
-		sdkApi.Client = &client{cl}
-	}
-
-	api, err := sdk.New(
-		c.Organization,
-		c.APIKey,
-		c.Region,
-		options,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	// fetch known scaleway server types to support validation in r/server
-	if len(commercialServerTypes) == 0 {
-		if availability, err := api.GetServerAvailabilities(); err == nil {
-			commercialServerTypes = availability.CommercialTypes()
-			sort.StringSlice(commercialServerTypes).Sort()
-		}
-		if os.Getenv("DISABLE_SCALEWAY_SERVER_TYPE_VALIDATION") != "" {
-			commercialServerTypes = commercialServerTypes[:0]
-		}
-	}
-	return &Client{api}, nil
+	return config, nil
 }

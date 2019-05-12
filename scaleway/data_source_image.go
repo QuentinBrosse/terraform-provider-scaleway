@@ -1,3 +1,5 @@
+// +build ignore
+
 package scaleway
 
 import (
@@ -79,7 +81,7 @@ type localImage struct {
 }
 
 func dataSourceScalewayImageRead(d *schema.ResourceData, meta interface{}) error {
-	scaleway := meta.(*Client).scaleway
+	scaleway := meta.(*Client).scaleway_DEPRECATED
 
 	var nameMatch func(api.MarketImage) bool
 	if name, ok := d.GetOk("name"); ok {

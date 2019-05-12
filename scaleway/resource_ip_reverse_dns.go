@@ -1,3 +1,5 @@
+// +build ignore
+
 package scaleway
 
 import (
@@ -31,7 +33,7 @@ func resourceScalewayIPReverseDNS() *schema.Resource {
 }
 
 func resourceScalewayIPReverseDNSCreate(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	ips, err := scaleway.GetIPS()
 	if err != nil {
@@ -50,7 +52,7 @@ func resourceScalewayIPReverseDNSCreate(d *schema.ResourceData, m interface{}) e
 }
 
 func resourceScalewayIPReverseDNSRead(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	ip, err := scaleway.GetIP(d.Get("ip").(string))
 	if err != nil {
@@ -69,7 +71,7 @@ func resourceScalewayIPReverseDNSRead(d *schema.ResourceData, m interface{}) err
 }
 
 func resourceScalewayIPReverseDNSUpdate(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	ip, err := scaleway.UpdateIP(api.UpdateIPRequest{
 		ID:      d.Get("ip").(string),
@@ -88,7 +90,7 @@ func resourceScalewayIPReverseDNSUpdate(d *schema.ResourceData, m interface{}) e
 }
 
 func resourceScalewayIPReverseDNSDelete(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	_, err := scaleway.UpdateIP(api.UpdateIPRequest{
 		ID:      d.Get("ip").(string),

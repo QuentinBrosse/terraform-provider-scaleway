@@ -1,3 +1,5 @@
+// +build ignore
+
 package scaleway
 
 import (
@@ -29,7 +31,7 @@ func resourceScalewayBucket() *schema.Resource {
 }
 
 func resourceScalewayBucketRead(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	_, err := scaleway.ListObjects(d.Get("name").(string))
 	if err != nil {
@@ -44,7 +46,7 @@ func resourceScalewayBucketRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScalewayBucketCreate(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	container, err := scaleway.CreateBucket(&api.CreateBucketRequest{
 		Name:         d.Get("name").(string),
@@ -59,7 +61,7 @@ func resourceScalewayBucketCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScalewayBucketDelete(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Client).scaleway_DEPRECATED
 
 	err := scaleway.DeleteBucket(d.Id())
 	if err != nil {

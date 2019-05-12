@@ -1,3 +1,5 @@
+// +build ignore
+
 package scaleway
 
 import (
@@ -26,10 +28,10 @@ func TestAccScalewayVolumeAttachment_Basic(t *testing.T) {
 }
 
 func testAccCheckScalewayVolumeAttachmentDestroy(s *terraform.State) error {
-	client := testAccProvider.Meta().(*Client).scaleway
+	client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "scaleway" {
+		if rs.Type != "scaleway_DEPRECATED" {
 			continue
 		}
 
@@ -51,7 +53,7 @@ func testAccCheckScalewayVolumeAttachmentDestroy(s *terraform.State) error {
 
 func testAccCheckScalewayVolumeAttachmentExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		client := testAccProvider.Meta().(*Client).scaleway
+		client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
 
 		rs, _ := s.RootModule().Resources[n]
 
