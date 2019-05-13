@@ -24,7 +24,7 @@ func testSweepToken(region string) error {
 		return fmt.Errorf("error getting client: %s", err)
 	}
 
-	scaleway := client.(*Client).scaleway_DEPRECATED
+	scaleway := client.(*Client).scaleway
 	log.Printf("[DEBUG] Destroying the tokens in (%s)", region)
 
 	tokens, err := scaleway.GetTokens()
@@ -97,10 +97,10 @@ func TestAccScalewayToken_Expiry(t *testing.T) {
 }
 
 func testAccCheckScalewayTokenDestroy(s *terraform.State) error {
-	client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
+	client := testAccProvider.Meta().(*Client).scaleway
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "scaleway_DEPRECATED" {
+		if rs.Type != "scaleway" {
 			continue
 		}
 
@@ -126,7 +126,7 @@ func testAccCheckScalewayTokenExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("No Token ID is set")
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
+		client := testAccProvider.Meta().(*Client).scaleway
 		token, err := client.GetToken(rs.Primary.ID)
 
 		if err != nil {

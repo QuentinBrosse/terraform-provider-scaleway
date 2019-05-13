@@ -82,7 +82,7 @@ func bootscriptDescriptionAttributes(d *schema.ResourceData, script api.Bootscri
 }
 
 func dataSourceScalewayBootscriptRead(d *schema.ResourceData, meta interface{}) error {
-	scaleway := meta.(*Client).scaleway_DEPRECATED
+	scaleway := meta.(*Client).scaleway
 
 	scripts, err := scaleway.GetBootscripts()
 	if err != nil {

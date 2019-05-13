@@ -151,7 +151,7 @@ func resourceScalewayServer() *schema.Resource {
 			"state_detail": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "scaleway_DEPRECATED description of the server state",
+				Description: "scaleway description of the server state",
 			},
 		},
 	}
@@ -172,7 +172,7 @@ func attachIP(scaleway *api.API, serverID, IPAddress string) error {
 }
 
 func resourceScalewayServerCreate(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway_DEPRECATED
+	scaleway := m.(*Client).scaleway
 
 	image := d.Get("image").(string)
 	var req = api.ServerDefinition{
@@ -272,7 +272,7 @@ func resourceScalewayServerCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScalewayServerRead(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway_DEPRECATED
+	scaleway := m.(*Client).scaleway
 
 	server, err := scaleway.GetServer(d.Id())
 	if err != nil {
@@ -320,7 +320,7 @@ func resourceScalewayServerRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScalewayServerUpdate(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway_DEPRECATED
+	scaleway := m.(*Client).scaleway
 
 	var req api.ServerPatchDefinition
 	if d.HasChange("name") {
@@ -361,7 +361,7 @@ func resourceScalewayServerUpdate(d *schema.ResourceData, m interface{}) error {
 	err := scaleway.PatchServer(d.Id(), req)
 
 	if err != nil {
-		return fmt.Errorf("Failed patching scaleway_DEPRECATED server: %q", err)
+		return fmt.Errorf("Failed patching scaleway server: %q", err)
 	}
 
 	if d.HasChange("public_ip") {
@@ -396,7 +396,7 @@ func resourceScalewayServerUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScalewayServerDelete(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway_DEPRECATED
+	scaleway := m.(*Client).scaleway
 
 	s, err := scaleway.GetServer(d.Id())
 	if err != nil {

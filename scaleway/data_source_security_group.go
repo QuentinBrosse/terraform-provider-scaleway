@@ -32,7 +32,7 @@ func dataSourceScalewaySecurityGroup() *schema.Resource {
 	}
 }
 func dataSourceScalewaySecurityGroupRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*Client).scaleway_DEPRECATED
+	client := m.(*Client).scaleway
 
 	groups, err := client.GetSecurityGroups()
 	if err != nil {

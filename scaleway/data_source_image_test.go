@@ -79,7 +79,7 @@ func testAccCheckImageID(n string) resource.TestCheckFunc {
 			return fmt.Errorf("image data source ID not set")
 		}
 
-		scaleway := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
+		scaleway := testAccProvider.Meta().(*Client).scaleway
 		_, err := scaleway.GetImage(rs.Primary.ID)
 
 		if err != nil {

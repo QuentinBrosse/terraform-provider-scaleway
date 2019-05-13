@@ -40,7 +40,7 @@ func getSSHKeyFingerprint(key []byte) (string, error) {
 }
 
 func resourceScalewaySSHKeyCreate(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway_DEPRECATED
+	scaleway := m.(*Client).scaleway
 
 	fingerprint, err := getSSHKeyFingerprint([]byte(d.Get("key").(string)))
 	if err != nil {
@@ -82,7 +82,7 @@ func resourceScalewaySSHKeyCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScalewaySSHKeyRead(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway_DEPRECATED
+	scaleway := m.(*Client).scaleway
 
 	user, err := scaleway.GetUser()
 	if err != nil {
@@ -105,7 +105,7 @@ func resourceScalewaySSHKeyRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceScalewaySSHKeyDelete(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway_DEPRECATED
+	scaleway := m.(*Client).scaleway
 
 	user, err := scaleway.GetUser()
 	if err != nil {

@@ -65,7 +65,7 @@ func resourceScalewaySecurityGroup() *schema.Resource {
 }
 
 func resourceScalewaySecurityGroupCreate(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway_DEPRECATED
+	scaleway := m.(*Client).scaleway
 
 	req := api.NewSecurityGroup{
 		Name:                  d.Get("name").(string),
@@ -96,7 +96,7 @@ func resourceScalewaySecurityGroupCreate(d *schema.ResourceData, m interface{}) 
 }
 
 func resourceScalewaySecurityGroupRead(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway_DEPRECATED
+	scaleway := m.(*Client).scaleway
 	group, err := scaleway.GetSecurityGroup(d.Id())
 
 	if err != nil {
@@ -123,7 +123,7 @@ func resourceScalewaySecurityGroupRead(d *schema.ResourceData, m interface{}) er
 }
 
 func resourceScalewaySecurityGroupUpdate(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway_DEPRECATED
+	scaleway := m.(*Client).scaleway
 
 	var req = api.UpdateSecurityGroup{
 		Organization:          scaleway.Organization,
@@ -143,7 +143,7 @@ func resourceScalewaySecurityGroupUpdate(d *schema.ResourceData, m interface{}) 
 }
 
 func resourceScalewaySecurityGroupDelete(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway_DEPRECATED
+	scaleway := m.(*Client).scaleway
 
 	err := scaleway.DeleteSecurityGroup(d.Id())
 	if err != nil {

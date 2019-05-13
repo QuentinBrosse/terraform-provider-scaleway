@@ -72,7 +72,7 @@ func testAccCheckScalewaySecurityGroupsExists(n string, group *api.SecurityGroup
 			return fmt.Errorf("No Security Group is set")
 		}
 
-		conn := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
+		conn := testAccProvider.Meta().(*Client).scaleway
 		resp, err := conn.GetSecurityGroup(rs.Primary.ID)
 
 		if err != nil {
@@ -89,10 +89,10 @@ func testAccCheckScalewaySecurityGroupsExists(n string, group *api.SecurityGroup
 }
 
 func testAccCheckScalewaySecurityGroupRuleDestroy(s *terraform.State) error {
-	client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
+	client := testAccProvider.Meta().(*Client).scaleway
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "scaleway_DEPRECATED" {
+		if rs.Type != "scaleway" {
 			continue
 		}
 
@@ -122,7 +122,7 @@ func testAccCheckScalewaySecurityGroupRuleAttributes(n string, group *api.Securi
 			return fmt.Errorf("Unknown resource: %s", n)
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
+		client := testAccProvider.Meta().(*Client).scaleway
 		rule, err := client.GetSecurityGroupRule(group.ID, rs.Primary.ID)
 		if err != nil {
 			return err
@@ -160,7 +160,7 @@ func testAccCheckScalewaySecurityGroupRuleExists(n string, group *api.SecurityGr
 			return fmt.Errorf("No Security Group Rule ID is set")
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway_DEPRECATED
+		client := testAccProvider.Meta().(*Client).scaleway
 		rule, err := client.GetSecurityGroupRule(group.ID, rs.Primary.ID)
 
 		if err != nil {

@@ -14,7 +14,7 @@ func TestMain(m *testing.M) {
 	resource.TestMain(m)
 }
 
-// sharedClientForRegion returns a common scaleway_DEPRECATED client needed for the sweeper
+// sharedClientForRegion returns a common scaleway client needed for the sweeper
 // functions for a given region {par1,ams1}
 func sharedClientForRegion(region string) (interface{}, error) {
 	if os.Getenv("SCALEWAY_ORGANIZATION") == "" {
@@ -26,9 +26,9 @@ func sharedClientForRegion(region string) (interface{}, error) {
 	}
 
 	conf := &Meta{
-		Organization_DEPRECATED: os.Getenv("SCALEWAY_ORGANIZATION"),
-		APIKey_DEPRECATED:       os.Getenv("SCALEWAY_TOKEN"),
-		Region_DEPRECATED:       region,
+		Organization: os.Getenv("SCALEWAY_ORGANIZATION"),
+		APIKey:       os.Getenv("SCALEWAY_TOKEN"),
+		Region:       region,
 	}
 
 	// configures a default client for the region, using the above env vars

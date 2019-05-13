@@ -39,7 +39,7 @@ func dataSourceScalewayVolume() *schema.Resource {
 }
 
 func dataSourceScalewayVolumeRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*Client).scaleway_DEPRECATED
+	client := m.(*Client).scaleway
 
 	name := d.Get("name").(string)
 

@@ -37,7 +37,7 @@ func resourceScalewayVolumeAttachment() *schema.Resource {
 var errVolumeAlreadyAttached = fmt.Errorf("Scaleway volume already attached")
 
 func resourceScalewayVolumeAttachmentCreate(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway_DEPRECATED
+	scaleway := m.(*Client).scaleway
 
 	vol, err := scaleway.GetVolume(d.Get("volume").(string))
 
@@ -94,13 +94,13 @@ func resourceScalewayVolumeAttachmentCreate(d *schema.ResourceData, m interface{
 		return err
 	}
 
-	d.SetId(fmt.Sprintf("scaleway_DEPRECATED-server:%s/volume/%s", d.Get("server").(string), d.Get("volume").(string)))
+	d.SetId(fmt.Sprintf("scaleway-server:%s/volume/%s", d.Get("server").(string), d.Get("volume").(string)))
 
 	return resourceScalewayVolumeAttachmentRead(d, m)
 }
 
 func resourceScalewayVolumeAttachmentRead(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway_DEPRECATED
+	scaleway := m.(*Client).scaleway
 
 	server, err := scaleway.GetServer(d.Get("server").(string))
 	if err != nil {
@@ -141,7 +141,7 @@ func resourceScalewayVolumeAttachmentRead(d *schema.ResourceData, m interface{})
 const serverWaitTimeout = 5 * time.Minute
 
 func resourceScalewayVolumeAttachmentDelete(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway_DEPRECATED
+	scaleway := m.(*Client).scaleway
 
 	if err := withStoppedServer(scaleway, d.Get("server").(string), func(server *api.Server) error {
 		volumes := make(map[string]api.Volume)
