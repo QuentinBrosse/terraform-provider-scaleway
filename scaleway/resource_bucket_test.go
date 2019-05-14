@@ -19,12 +19,11 @@ func init() {
 }
 
 func testSweepBucket(region string) error {
-	client, err := sharedClientForRegion(region)
+	scaleway, err := sharedDeprecatedClientForRegion(region)
 	if err != nil {
 		return fmt.Errorf("error getting client: %s", err)
 	}
 
-	scaleway := client.(*Client).scaleway
 	log.Printf("[DEBUG] Destroying the buckets in (%s)", region)
 
 	containers, err := scaleway.GetContainers()

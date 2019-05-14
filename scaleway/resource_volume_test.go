@@ -19,12 +19,11 @@ func init() {
 }
 
 func testSweepVolume(region string) error {
-	client, err := sharedClientForRegion(region)
+	scaleway, err := sharedDeprecatedClientForRegion(region)
 	if err != nil {
 		return fmt.Errorf("error getting client: %s", err)
 	}
 
-	scaleway := client.(*Client).scaleway
 	log.Printf("[DEBUG] Destroying the volumes in (%s)", region)
 
 	volumes, err := scaleway.GetVolumes()

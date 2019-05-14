@@ -1,12 +1,11 @@
 package scaleway
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
-	scwUtils "github.com/scaleway/scaleway-sdk-go/utils"
+	"github.com/scaleway/scaleway-sdk-go/utils"
 )
 
 var mu = sync.Mutex{}
@@ -19,80 +18,50 @@ func Provider() terraform.ResourceProvider {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The Scaleway access Key.",
-				DefaultFunc: schema.SchemaDefaultFunc(func() (interface{}, error) {
-					if accessKey, exist := scwConfig.GetAccessKey(); exist {
-						return accessKey, nil
-					}
-					return nil, fmt.Errorf("no access key found")
-				}),
+				// This is breaking change
+				Default: "",
 			},
 			"secret_key": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "The Scaleway secret Key.",
-				DefaultFunc: schema.SchemaDefaultFunc(func() (interface{}, error) {
-					if secretKey, exist := scwConfig.GetSecretKey(); exist {
-						return secretKey, nil
-					}
-					return nil, fmt.Errorf("no secret key found")
-				}),
+				// This is breaking change
+				Default: "",
 			},
 			"token": {
 				Type:       schema.TypeString,
 				Optional:   true,
 				Deprecated: "Use `secret_key` instead.",
-				DefaultFunc: schema.SchemaDefaultFunc(func() (interface{}, error) {
-					if secretKey, exist := scwConfig.GetSecretKey(); exist {
-						return secretKey, nil
-					}
-					return nil, fmt.Errorf("no secret key found")
-				}),
-			},
-			"organization": {
-				Type:       schema.TypeString,
-				Optional:   true,
-				Deprecated: "Use `organization_id` instead.",
-				DefaultFunc: schema.SchemaDefaultFunc(func() (interface{}, error) {
-					if organizationID, exist := scwConfig.GetDefaultOrganizationID(); exist {
-						return organizationID, nil
-					}
-					return nil, fmt.Errorf("no organization id found")
-				}),
+				// This is breaking change
+				Default: "",
 			},
 			"organization_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The Scaleway organization ID.",
-				DefaultFunc: schema.SchemaDefaultFunc(func() (interface{}, error) {
-					if organizationID, exist := scwConfig.GetDefaultOrganizationID(); exist {
-						return organizationID, nil
-					}
-					return nil, fmt.Errorf("no organization id found")
-				}),
+				// This is breaking change
+				Default: "",
+			},
+			"organization": {
+				Type:       schema.TypeString,
+				Optional:   true,
+				Deprecated: "Use `organization_id` instead.",
+				// This is breaking change
+				Default: "",
 			},
 			"region": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The Scaleway default region to use for your resources.",
-				DefaultFunc: schema.SchemaDefaultFunc(func() (interface{}, error) {
-					region, exist := scwConfig.GetDefaultRegion()
-					if exist {
-						return region, nil
-					}
-					return scwUtils.RegionFrPar, nil
-				}),
+				// This is breaking change
+				Default: "",
 			},
 			"zone": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The Scaleway default zone to use for your resources.",
-				DefaultFunc: schema.SchemaDefaultFunc(func() (interface{}, error) {
-					zone, exist := scwConfig.GetDefaultZone()
-					if exist {
-						return zone, nil
-					}
-					return scwUtils.ZoneFrPar1, nil
-				}),
+				// This is breaking change
+				Default: "",
 			},
 		},
 
@@ -100,10 +69,10 @@ func Provider() terraform.ResourceProvider {
 			//"scaleway_bucket":              resourceScalewayBucket(),
 			//"scaleway_user_data":           resourceScalewayUserData(),
 			//"scaleway_server":              resourceScalewayServer(),
-			//"scaleway_token": 			  resourceScalewayToken(),
+			"scaleway_token": resourceScalewayToken(),
 			//"scaleway_ssh_key":             resourceScalewaySSHKey(),
-			//"scaleway_ip":                  resourceScalewayIP(),
-			//"scaleway_ip_reverse_dns":      resourceScalewayIPReverseDNS(),
+			"scaleway_ip":             resourceScalewayIP(),
+			"scaleway_ip_reverse_dns": resourceScalewayIPReverseDNS(),
 			//"scaleway_security_group":      resourceScalewaySecurityGroup(),
 			//"scaleway_security_group_rule": resourceScalewaySecurityGroupRule(),
 			//"scaleway_volume":              resourceScalewayVolume(),
@@ -121,6 +90,22 @@ func Provider() terraform.ResourceProvider {
 	}
 }
 
-func providerConfigure(_ *schema.ResourceData) (interface{}, error) {
-	return NewMeta()
+func providerConfigure(d *schema.ResourceData) (interface{}, error) {
+	config := &Config{
+		AccessKey:             d.Get("access_key").(string),
+		SecretKey:             d.Get("secret_key").(string),
+		DefaultOrganizationID: d.Get("organization_id").(string),
+		DefaultRegion:         utils.Region(d.Get("region").(string)),
+		DefaultZone:           utils.Zone(d.Get("zone").(string)),
+	}
+
+	// Handle deprecated values
+	if config.SecretKey == "" {
+		config.SecretKey = d.Get("token").(string)
+	}
+	if config.DefaultOrganizationID == "" {
+		config.DefaultOrganizationID = d.Get("organization_id").(string)
+	}
+
+	return config.Meta()
 }

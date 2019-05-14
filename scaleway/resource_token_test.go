@@ -1,5 +1,3 @@
-// +build ignore
-
 package scaleway
 
 import (
@@ -19,14 +17,15 @@ func init() {
 }
 
 func testSweepToken(region string) error {
-	client, err := sharedClientForRegion(region)
+	scaleway, err := sharedDeprecatedClientForRegion(region)
 	if err != nil {
 		return fmt.Errorf("error getting client: %s", err)
 	}
 
-	scaleway := client.(*Client).scaleway
 	log.Printf("[DEBUG] Destroying the tokens in (%s)", region)
 
+	// TODO: seems to delete all the tokens, need to check it they was created by terraform or not.
+	// Check: https://www.terraform.io/docs/extend/testing/acceptance-tests/sweepers.html
 	tokens, err := scaleway.GetTokens()
 	if err != nil {
 		return fmt.Errorf("Error describing tokens in Sweeper: %s", err)
@@ -97,7 +96,7 @@ func TestAccScalewayToken_Expiry(t *testing.T) {
 }
 
 func testAccCheckScalewayTokenDestroy(s *terraform.State) error {
-	client := testAccProvider.Meta().(*Client).scaleway
+	client := testAccProvider.Meta().(*Meta).deprecatedClient
 
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "scaleway" {
@@ -126,7 +125,7 @@ func testAccCheckScalewayTokenExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("No Token ID is set")
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway
+		client := testAccProvider.Meta().(*Meta).deprecatedClient
 		token, err := client.GetToken(rs.Primary.ID)
 
 		if err != nil {

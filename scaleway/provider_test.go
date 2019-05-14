@@ -29,13 +29,16 @@ func TestProvider_impl(t *testing.T) {
 }
 
 func testAccPreCheck(t *testing.T) {
-	if ak, exist := scwConfig.GetSecretKey(); !exist {
-		t.Logf(">>>> %s\n", ak)
+	if _, exist := scwConfig.GetSecretKey(); !exist {
 		t.Fatal("the Scaleway token must be set for acceptance tests.")
 	}
 
-	if oi, exist := scwConfig.GetDefaultOrganizationID(); !exist {
-		t.Logf(">>>> %s\n", oi)
+	if _, exist := scwConfig.GetDefaultOrganizationID(); !exist {
 		t.Fatal("the Scaleway organization ID must be set for acceptance tests.")
+	}
+
+	err := testAccProvider.Configure(terraform.NewResourceConfig(nil))
+	if err != nil {
+		t.Fatal(err)
 	}
 }
