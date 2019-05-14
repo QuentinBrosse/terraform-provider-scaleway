@@ -1,7 +1,6 @@
 package scaleway
 
 import (
-	"encoding/json"
 	"os"
 	"sync"
 
@@ -154,6 +153,7 @@ func Provider() terraform.ResourceProvider {
 	}
 }
 
+// providerConfigure creates the Meta object containing the SDK client.
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	config := &Config{
 		AccessKey:             d.Get("access_key").(string),
@@ -175,24 +175,4 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	}
 
 	return config.Meta()
-}
-
-type deprecatedScalewayConfig struct {
-	Organization string `json:"organization"`
-	Token        string `json:"token"`
-	Version      string `json:"version"`
-}
-
-func readDeprecatedScalewayConfig(path string) (string, string, error) {
-	f, err := os.Open(path)
-	if err != nil {
-		return "", "", err
-	}
-	defer f.Close()
-
-	var data deprecatedScalewayConfig
-	if err := json.NewDecoder(f).Decode(&data); err != nil {
-		return "", "", err
-	}
-	return data.Token, data.Organization, nil
 }

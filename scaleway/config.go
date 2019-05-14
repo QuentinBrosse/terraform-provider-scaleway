@@ -3,6 +3,7 @@ package scaleway
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -19,6 +20,7 @@ import (
 	"github.com/scaleway/scaleway-sdk-go/utils"
 )
 
+// scwConfig contains the Scaleway configuration.
 var scwConfig scwconfig.Config
 
 func init() {
@@ -70,11 +72,12 @@ func (c *Config) Meta() (*Meta, error) {
 	return meta, nil
 }
 
+// GetClient returns a new scw.Client from a configuration.
 func (c *Config) GetClient() (*scw.Client, error) {
-	cl := createRetryableHTTPClient()
+	httpClient := createRetryableHTTPClient()
 
 	options := []scw.ClientOption{
-		scw.WithHTTPClient(cl.HTTPClient),
+		scw.WithHTTPClient(httpClient.HTTPClient),
 	}
 
 	// The access key is not used for API authentications.
@@ -153,6 +156,7 @@ func (c *client) Do(r *http.Request) (*http.Response, error) {
 	return c.Client.Do(req)
 }
 
+// GetDeprecatedClient create a new deprecated client from a configuration.
 func (c *Config) GetDeprecatedClient() (*api.API, error) {
 	options := func(sdkApi *api.API) {
 		sdkApi.Client = &client{retryablehttp.NewClient()}
@@ -173,4 +177,26 @@ func (c *Config) GetDeprecatedClient() (*api.API, error) {
 		region,
 		options,
 	)
+}
+
+// deprecatedScalewayConfig is the structure of the deprecated Scaleway config file.
+type deprecatedScalewayConfig struct {
+	Organization string `json:"organization"`
+	Token        string `json:"token"`
+	Version      string `json:"version"`
+}
+
+// readDeprecatedScalewayConfig parse the deprecated Scaleway config file.
+func readDeprecatedScalewayConfig(path string) (string, string, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return "", "", err
+	}
+	defer f.Close()
+
+	var data deprecatedScalewayConfig
+	if err := json.NewDecoder(f).Decode(&data); err != nil {
+		return "", "", err
+	}
+	return data.Token, data.Organization, nil
 }
