@@ -75,21 +75,18 @@ func TestAccScalewayIP_Basic(t *testing.T) {
 						"scaleway_ip.base", "reverse", "www.google.de"),
 				),
 			},
-			/*
-				TODO: Uncomment me when scaleway_server resource will be OK !
-				{
-					Config: testAccCheckScalewayIPAttachConfig,
-					Check: resource.ComposeTestCheckFunc(
-						testAccCheckScalewayServerExists("scaleway_server.base"),
-						testAccCheckScalewayIPExists("scaleway_ip.base"),
-						testAccCheckScalewayIPAttachment("scaleway_ip.base", func(serverID string) bool {
-							return serverID != ""
-						}, "attachment failed"),
-						resource.TestCheckResourceAttr(
-							"scaleway_ip.base", "reverse", ""),
-					),
-				},
-			*/
+			{
+				Config: testAccCheckScalewayIPAttachConfig,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckScalewayServerExists("scaleway_server.base"),
+					testAccCheckScalewayIPExists("scaleway_ip.base"),
+					testAccCheckScalewayIPAttachment("scaleway_ip.base", func(serverID string) bool {
+						return serverID != ""
+					}, "attachment failed"),
+					resource.TestCheckResourceAttr(
+						"scaleway_ip.base", "reverse", ""),
+				),
+			},
 			{
 				Config: testAccCheckScalewayIPConfig,
 				Check: resource.ComposeTestCheckFunc(
@@ -132,11 +129,11 @@ func testAccCheckScalewayIPExists(n string) resource.TestCheckFunc {
 		rs, ok := s.RootModule().Resources[n]
 
 		if !ok {
-			return fmt.Errorf("not found: %s", n)
+			return fmt.Errorf("Not found: %s", n)
 		}
 
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("no IP ID is set")
+			return fmt.Errorf("No IP ID is set")
 		}
 
 		client := testAccProvider.Meta().(*Meta).deprecatedClient
@@ -147,7 +144,7 @@ func testAccCheckScalewayIPExists(n string) resource.TestCheckFunc {
 		}
 
 		if ip.ID != rs.Primary.ID {
-			return fmt.Errorf("record not found")
+			return fmt.Errorf("Record not found")
 		}
 
 		return nil
@@ -159,11 +156,11 @@ func testAccCheckScalewayIPAttachment(n string, check func(string) bool, msg str
 		rs, ok := s.RootModule().Resources[n]
 
 		if !ok {
-			return fmt.Errorf("not found: %s", n)
+			return fmt.Errorf("Not found: %s", n)
 		}
 
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("no IP ID is set")
+			return fmt.Errorf("No IP ID is set")
 		}
 
 		client := testAccProvider.Meta().(*Meta).deprecatedClient

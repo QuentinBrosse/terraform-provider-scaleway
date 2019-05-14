@@ -6,13 +6,11 @@ import (
 	"os"
 	"sort"
 
-	"github.com/scaleway/scaleway-sdk-go/scw"
-
-	"github.com/scaleway/scaleway-sdk-go/api/instance/v1"
-
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 	api "github.com/nicolai86/scaleway-sdk"
+	"github.com/scaleway/scaleway-sdk-go/api/instance/v1"
+	"github.com/scaleway/scaleway-sdk-go/scw"
 )
 
 var commercialServerTypes []string
