@@ -1,5 +1,3 @@
-// +build ignore
-
 package scaleway
 
 import (
@@ -58,7 +56,7 @@ func TestAccScalewayVolume_Basic(t *testing.T) {
 }
 
 func testAccCheckScalewayVolumeDestroy(s *terraform.State) error {
-	client := testAccProvider.Meta().(*Client).scaleway
+	client := testAccProvider.Meta().(*Meta).deprecatedClient
 
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "scaleway" {
@@ -82,7 +80,7 @@ func testAccCheckScalewayVolumeAttributes(n string) resource.TestCheckFunc {
 			return fmt.Errorf("Unknown resource: %s", n)
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway
+		client := testAccProvider.Meta().(*Meta).deprecatedClient
 		volume, err := client.GetVolume(rs.Primary.ID)
 
 		if err != nil {
@@ -115,7 +113,7 @@ func testAccCheckScalewayVolumeExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("No Volume ID is set")
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway
+		client := testAccProvider.Meta().(*Meta).deprecatedClient
 		volume, err := client.GetVolume(rs.Primary.ID)
 
 		if err != nil {

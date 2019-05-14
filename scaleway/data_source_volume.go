@@ -1,5 +1,3 @@
-// +build ignore
-
 package scaleway
 
 import (
@@ -39,7 +37,7 @@ func dataSourceScalewayVolume() *schema.Resource {
 }
 
 func dataSourceScalewayVolumeRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*Client).scaleway
+	client := m.(*Meta).deprecatedClient
 
 	name := d.Get("name").(string)
 

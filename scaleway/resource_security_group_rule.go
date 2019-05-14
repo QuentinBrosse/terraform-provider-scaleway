@@ -1,5 +1,3 @@
-// +build ignore
-
 package scaleway
 
 import (
@@ -73,7 +71,7 @@ func resourceScalewaySecurityGroupRule() *schema.Resource {
 }
 
 func resourceScalewaySecurityGroupRuleCreate(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Meta).deprecatedClient
 
 	req := api.NewSecurityGroupRule{
 		Action:       d.Get("action").(string),
@@ -102,7 +100,7 @@ func resourceScalewaySecurityGroupRuleCreate(d *schema.ResourceData, m interface
 }
 
 func resourceScalewaySecurityGroupRuleRead(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Meta).deprecatedClient
 	rule, err := scaleway.GetSecurityGroupRule(d.Get("security_group").(string), d.Id())
 
 	if err != nil {
@@ -128,7 +126,7 @@ func resourceScalewaySecurityGroupRuleRead(d *schema.ResourceData, m interface{}
 }
 
 func resourceScalewaySecurityGroupRuleUpdate(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Meta).deprecatedClient
 
 	var req = api.UpdateSecurityGroupRule{
 		Action:       d.Get("action").(string),
@@ -148,7 +146,7 @@ func resourceScalewaySecurityGroupRuleUpdate(d *schema.ResourceData, m interface
 }
 
 func resourceScalewaySecurityGroupRuleDelete(d *schema.ResourceData, m interface{}) error {
-	scaleway := m.(*Client).scaleway
+	scaleway := m.(*Meta).deprecatedClient
 
 	err := scaleway.DeleteSecurityGroupRule(d.Get("security_group").(string), d.Id())
 	if err != nil {

@@ -50,23 +50,6 @@ type Meta struct {
 func (c *Config) Meta() (*Meta, error) {
 	meta := &Meta{}
 
-	// ScwConfig have the priority over the client configuration.
-	if val, exists := scwConfig.GetAccessKey(); exists {
-		c.AccessKey = val
-	}
-	if val, exists := scwConfig.GetSecretKey(); exists {
-		c.SecretKey = val
-	}
-	if val, exists := scwConfig.GetDefaultOrganizationID(); exists {
-		c.DefaultOrganizationID = val
-	}
-	if val, exists := scwConfig.GetDefaultRegion(); exists {
-		c.DefaultRegion = val
-	}
-	if val, exists := scwConfig.GetDefaultZone(); exists {
-		c.DefaultZone = val
-	}
-
 	client, err := c.GetClient()
 	if err != nil {
 		return nil, err
@@ -79,13 +62,10 @@ func (c *Config) Meta() (*Meta, error) {
 	}
 	meta.deprecatedClient = deprecatedClient
 
-	// TODO: Uncomment me when server resource will be implemented.
-	/*
-		err = fetchServerAvailabilities(client)
-		if err != nil {
-			log.Printf("error: cannot fetch server availabilities: %s", err)
-		}
-	*/
+	err = fetchServerAvailabilities(client)
+	if err != nil {
+		log.Printf("error: cannot fetch server availabilities: %s", err)
+	}
 
 	return meta, nil
 }
@@ -93,8 +73,9 @@ func (c *Config) Meta() (*Meta, error) {
 func (c *Config) GetClient() (*scw.Client, error) {
 	cl := createRetryableHTTPClient()
 
+	// scw.WithConfig(scwConfig),
 	options := []scw.ClientOption{
-		scw.WithConfig(scwConfig), scw.WithHTTPClient(cl.HTTPClient),
+		scw.WithHTTPClient(cl.HTTPClient),
 	}
 
 	// The access key is not used for API authentications.
@@ -178,11 +159,6 @@ func (c *Config) GetDeprecatedClient() (*deprecatedSDK.API, error) {
 		sdkApi.Client = &client{retryablehttp.NewClient()}
 	}
 
-	secretKey := c.SecretKey
-	if secretKey == "" && c.AccessKey != "" {
-		secretKey = c.AccessKey
-	}
-
 	// TODO: Replace by a parsing with error handling.
 	region := ""
 	if c.DefaultRegion == utils.RegionFrPar || c.DefaultZone == utils.ZoneFrPar1 {
@@ -194,7 +170,7 @@ func (c *Config) GetDeprecatedClient() (*deprecatedSDK.API, error) {
 
 	return deprecatedSDK.New(
 		c.DefaultOrganizationID,
-		secretKey,
+		c.SecretKey,
 		region,
 		options,
 	)

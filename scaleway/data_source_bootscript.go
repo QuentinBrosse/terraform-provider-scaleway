@@ -1,5 +1,3 @@
-// +build ignore
-
 package scaleway
 
 import (
@@ -82,7 +80,7 @@ func bootscriptDescriptionAttributes(d *schema.ResourceData, script api.Bootscri
 }
 
 func dataSourceScalewayBootscriptRead(d *schema.ResourceData, meta interface{}) error {
-	scaleway := meta.(*Client).scaleway
+	scaleway := meta.(*Meta).deprecatedClient
 
 	scripts, err := scaleway.GetBootscripts()
 	if err != nil {

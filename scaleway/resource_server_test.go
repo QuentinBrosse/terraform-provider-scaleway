@@ -1,5 +1,3 @@
-// +build ignore
-
 package scaleway
 
 import (
@@ -187,7 +185,7 @@ func TestAccScalewayServer_SecurityGroup(t *testing.T) {
 }
 
 func testAccCheckScalewayServerDestroy(s *terraform.State) error {
-	client := testAccProvider.Meta().(*Client).scaleway
+	client := testAccProvider.Meta().(*Meta).deprecatedClient
 
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "scaleway" {
@@ -216,7 +214,7 @@ func testAccCheckScalewayServerIPAttachmentAttributes(ipName, serverName string)
 			return fmt.Errorf("Unknown scaleway_server resource: %s", serverName)
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway
+		client := testAccProvider.Meta().(*Meta).deprecatedClient
 
 		ip, err := client.GetIP(rs.Primary.ID)
 		if err != nil {
@@ -237,7 +235,7 @@ func testAccCheckScalewayServerIPDetachmentAttributes(n string) resource.TestChe
 			return fmt.Errorf("Unknown resource: %s", n)
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway
+		client := testAccProvider.Meta().(*Meta).deprecatedClient
 		server, err := client.GetServer(rs.Primary.ID)
 		if err != nil {
 			return err
@@ -257,7 +255,7 @@ func testAccCheckScalewayServerSecurityGroup(n, securityGroupName string) resour
 			return fmt.Errorf("Unknown resource: %s", n)
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway
+		client := testAccProvider.Meta().(*Meta).deprecatedClient
 		server, err := client.GetServer(rs.Primary.ID)
 
 		if err != nil {
@@ -284,7 +282,7 @@ func testAccCheckScalewayServerExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("No Server ID is set")
 		}
 
-		client := testAccProvider.Meta().(*Client).scaleway
+		client := testAccProvider.Meta().(*Meta).deprecatedClient
 		server, err := client.GetServer(rs.Primary.ID)
 
 		if err != nil {

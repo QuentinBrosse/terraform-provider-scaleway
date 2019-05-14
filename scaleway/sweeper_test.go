@@ -30,9 +30,7 @@ func sharedDeprecatedClientForRegion(region string) (*api.API, error) {
 	config := &Config{
 		AccessKey:             accessKey,
 		DefaultOrganizationID: organizationId,
-
-		// TODO: Replace by a parsing with error handling.
-		DefaultRegion: utils.Region(region),
+		DefaultRegion:         utils.Region(region),
 	}
 
 	// configures a default client for the region, using the above env vars

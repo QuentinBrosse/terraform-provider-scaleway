@@ -1,5 +1,3 @@
-// +build ignore
-
 package scaleway
 
 import (
@@ -57,7 +55,7 @@ func TestAccScalewayBucket(t *testing.T) {
 }
 
 func testAccCheckScalewayBucketDestroy(s *terraform.State) error {
-	client := testAccProvider.Meta().(*Client).scaleway
+	client := testAccProvider.Meta().(*Meta).deprecatedClient
 
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "scaleway" {

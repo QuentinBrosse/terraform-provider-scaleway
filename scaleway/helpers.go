@@ -2,6 +2,7 @@ package scaleway
 
 import (
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 
@@ -19,26 +20,23 @@ func String(val string) *string {
 	return &val
 }
 
-// TODO: Uncomment me when server resource will be implemented.
-/*
-	func validateServerType(v interface{}, k string) (ws []string, errors []error) {
-		// only validate if we were able to fetch a list of commercial types
-		if len(commercialServerTypes) == 0 {
-			return
-		}
-
-		isKnown := false
-		requestedType := v.(string)
-		for _, knownType := range commercialServerTypes {
-			isKnown = isKnown || strings.ToUpper(knownType) == strings.ToUpper(requestedType)
-		}
-
-		if !isKnown {
-			errors = append(errors, fmt.Errorf("%q must be one of %q", k, commercialServerTypes))
-		}
+func validateServerType(v interface{}, k string) (ws []string, errors []error) {
+	// only validate if we were able to fetch a list of commercial types
+	if len(commercialServerTypes) == 0 {
 		return
 	}
-*/
+
+	isKnown := false
+	requestedType := v.(string)
+	for _, knownType := range commercialServerTypes {
+		isKnown = isKnown || strings.ToUpper(knownType) == strings.ToUpper(requestedType)
+	}
+
+	if !isKnown {
+		errors = append(errors, fmt.Errorf("%q must be one of %q", k, commercialServerTypes))
+	}
+	return
+}
 
 func validateVolumeType(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
