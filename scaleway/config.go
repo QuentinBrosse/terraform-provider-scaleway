@@ -73,7 +73,6 @@ func (c *Config) Meta() (*Meta, error) {
 func (c *Config) GetClient() (*scw.Client, error) {
 	cl := createRetryableHTTPClient()
 
-	// scw.WithConfig(scwConfig),
 	options := []scw.ClientOption{
 		scw.WithHTTPClient(cl.HTTPClient),
 	}
