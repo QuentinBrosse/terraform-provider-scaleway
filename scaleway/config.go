@@ -13,7 +13,7 @@ import (
 
 	retryablehttp "github.com/hashicorp/go-retryablehttp"
 	"github.com/hashicorp/terraform/helper/logging"
-	deprecatedSDK "github.com/nicolai86/scaleway-sdk"
+	api "github.com/nicolai86/scaleway-sdk"
 	"github.com/scaleway/scaleway-sdk-go/scw"
 	"github.com/scaleway/scaleway-sdk-go/scwconfig"
 	"github.com/scaleway/scaleway-sdk-go/utils"
@@ -43,7 +43,7 @@ type Config struct {
 // This meta value returned by this function is passed into all resources.
 type Meta struct {
 	client           *scw.Client
-	deprecatedClient *deprecatedSDK.API
+	deprecatedClient *api.API
 }
 
 // Meta creates a meta instance from a client configuration.
@@ -154,8 +154,8 @@ func (c *client) Do(r *http.Request) (*http.Response, error) {
 	return c.Client.Do(req)
 }
 
-func (c *Config) GetDeprecatedClient() (*deprecatedSDK.API, error) {
-	options := func(sdkApi *deprecatedSDK.API) {
+func (c *Config) GetDeprecatedClient() (*api.API, error) {
+	options := func(sdkApi *api.API) {
 		sdkApi.Client = &client{retryablehttp.NewClient()}
 	}
 
@@ -168,7 +168,7 @@ func (c *Config) GetDeprecatedClient() (*deprecatedSDK.API, error) {
 		region = "ams1"
 	}
 
-	return deprecatedSDK.New(
+	return api.New(
 		c.DefaultOrganizationID,
 		c.SecretKey,
 		region,
