@@ -12,9 +12,10 @@ import (
 	"os"
 	"time"
 
-	retryablehttp "github.com/hashicorp/go-retryablehttp"
+	"github.com/hashicorp/go-retryablehttp"
 	"github.com/hashicorp/terraform/helper/logging"
-	api "github.com/nicolai86/scaleway-sdk"
+	"github.com/nicolai86/scaleway-sdk"
+	"github.com/scaleway/scaleway-sdk-go/logger"
 	"github.com/scaleway/scaleway-sdk-go/scw"
 	"github.com/scaleway/scaleway-sdk-go/scwconfig"
 	"github.com/scaleway/scaleway-sdk-go/utils"
@@ -24,11 +25,15 @@ import (
 var scwConfig scwconfig.Config
 
 func init() {
+	// Init the Scaleaway config.
 	config, err := scwconfig.Load()
 	if err != nil {
 		log.Fatalf("error: cannot load configuration: %s", err)
 	}
 	scwConfig = config
+
+	// Init the SDK logger.
+	logger.SetLogger(sdkLogger{})
 }
 
 // Config is a configuration for a client.
