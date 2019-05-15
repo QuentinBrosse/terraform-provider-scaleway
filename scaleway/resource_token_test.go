@@ -24,8 +24,6 @@ func testSweepToken(region string) error {
 
 	log.Printf("[DEBUG] Destroying the tokens in (%s)", region)
 
-	// TODO: seems to delete all the tokens, need to check it they was created by terraform or not.
-	// Check: https://www.terraform.io/docs/extend/testing/acceptance-tests/sweepers.html
 	tokens, err := scaleway.GetTokens()
 	if err != nil {
 		return fmt.Errorf("Error describing tokens in Sweeper: %s", err)

@@ -414,9 +414,8 @@ func resourceScalewayServerDelete(d *schema.ResourceData, m interface{}) error {
 // fetchServerAvailabilities fetch known scaleway server types to support validation in r/server
 func fetchServerAvailabilities(client *scw.Client) error {
 	// TODO: add documentation for DISABLE_SCALEWAY_SERVER_TYPE_VALIDATION
-	_, disableTypeValivation := os.LookupEnv("DISABLE_SCALEWAY_SERVER_TYPE_VALIDATION")
-
-	if disableTypeValivation || len(commercialServerTypes) > 0 {
+	disableTypeValidation := os.Getenv("DISABLE_SCALEWAY_SERVER_TYPE_VALIDATION") != ""
+	if disableTypeValidation || len(commercialServerTypes) > 0 {
 		return nil
 	}
 

@@ -102,7 +102,9 @@ func Provider() terraform.ResourceProvider {
 					if path, err := homedir.Expand("~/.scwrc"); err == nil {
 						scwAPIKey, _, err := readDeprecatedScalewayConfig(path)
 						if err != nil {
-							return nil, err
+							// No error is returned here to allow user to use `secret_key`.
+							log.Printf("[ERROR] cannot parse deprecated config file: %s", err)
+							return nil, nil
 						}
 						// Depreciation log is already handled by scwconfig.
 						return scwAPIKey, nil
@@ -124,7 +126,9 @@ func Provider() terraform.ResourceProvider {
 					if path, err := homedir.Expand("~/.scwrc"); err == nil {
 						_, scwOrganization, err := readDeprecatedScalewayConfig(path)
 						if err != nil {
-							return nil, err
+							// No error is returned here to allow user to use `organization_id`.
+							log.Printf("[ERROR] cannot parse deprecated config file: %s", err)
+							return nil, nil
 						}
 						return scwOrganization, nil
 					}
