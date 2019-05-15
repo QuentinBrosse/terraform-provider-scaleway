@@ -1,6 +1,7 @@
 package scaleway
 
 import (
+	"log"
 	"os"
 	"sync"
 
@@ -23,6 +24,7 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.SchemaDefaultFunc(func() (interface{}, error) {
 					// Keep the deprecated behavior
 					if accessKey := os.Getenv("SCALEWAY_ACCESS_KEY"); accessKey != "" {
+						log.Printf("[WARN] SCALEWAY_ACCESS_KEY is deprecated, please use SCW_ACCESS_KEY instead")
 						return accessKey, nil
 					}
 					if accessKey, exists := scwConfig.GetAccessKey(); exists {
@@ -63,6 +65,7 @@ func Provider() terraform.ResourceProvider {
 					// Keep the deprecated behavior
 					// Note: The deprecated region format conversion is handled in `config.GetDeprecatedClient`.
 					if region := os.Getenv("SCALEWAY_REGION"); region != "" {
+						log.Printf("[WARN] SCALEWAY_REGION is deprecated, please use SCW_DEFAULT_REGION instead")
 						return region, nil
 					}
 					if defaultRegion, exists := scwConfig.GetDefaultRegion(); exists {
@@ -89,8 +92,10 @@ func Provider() terraform.ResourceProvider {
 				Optional:   true, // To allow user to use `secret_key`.
 				Deprecated: "Use `secret_key` instead.",
 				DefaultFunc: schema.SchemaDefaultFunc(func() (interface{}, error) {
+					// Keep the deprecated behavior
 					for _, k := range []string{"SCALEWAY_TOKEN", "SCALEWAY_ACCESS_KEY"} {
 						if os.Getenv(k) != "" {
+							log.Printf("[WARN] %s is deprecated, please use SCW_SECRET_KEY instead", k)
 							return os.Getenv(k), nil
 						}
 					}
@@ -99,6 +104,7 @@ func Provider() terraform.ResourceProvider {
 						if err != nil {
 							return nil, err
 						}
+						// Depreciation log is already handled by scwconfig.
 						return scwAPIKey, nil
 					}
 					// No error is returned here to allow user to use `secret_key`.
@@ -110,10 +116,10 @@ func Provider() terraform.ResourceProvider {
 				Optional:   true, // To allow user to use `organization_id`.
 				Deprecated: "Use `organization_id` instead.",
 				DefaultFunc: schema.SchemaDefaultFunc(func() (interface{}, error) {
-					for _, k := range []string{"SCALEWAY_ORGANIZATION"} {
-						if os.Getenv(k) != "" {
-							return os.Getenv(k), nil
-						}
+					// Keep the deprecated behavior
+					if organization := os.Getenv("SCALEWAY_ORGANIZATION"); organization != "" {
+						log.Printf("[WARN] SCALEWAY_ORGANIZATION is deprecated, please use SCW_DEFAULT_ORGANIZATION_ID instead")
+						return organization, nil
 					}
 					if path, err := homedir.Expand("~/.scwrc"); err == nil {
 						_, scwOrganization, err := readDeprecatedScalewayConfig(path)
@@ -163,7 +169,8 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		DefaultZone:           utils.Zone(d.Get("zone").(string)),
 	}
 
-	// Handle deprecated values
+	// Handle deprecated values.
+	// Deprecation messages will be handled by terraform.
 	if config.SecretKey == "" {
 		config.SecretKey = d.Get("token").(string)
 	}
@@ -171,6 +178,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		config.DefaultOrganizationID = d.Get("organization").(string)
 	}
 	if config.SecretKey == "" && config.AccessKey != "" {
+		log.Println("[WARN] you seem to use the access_key instead of secret_key in the provider. This bogus behavior is deprecated, please use the `secret_key` field instead.")
 		config.SecretKey = config.AccessKey
 	}
 
