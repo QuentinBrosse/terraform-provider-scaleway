@@ -79,10 +79,8 @@ func (c *Config) Meta() (*Meta, error) {
 
 // GetClient returns a new scw.Client from a configuration.
 func (c *Config) GetClient() (*scw.Client, error) {
-	httpClient := createRetryableHTTPClient()
-
 	options := []scw.ClientOption{
-		scw.WithHTTPClient(httpClient.HTTPClient),
+		scw.WithHTTPClient(createRetryableHTTPClient()),
 	}
 
 	// The access key is not used for API authentications.
@@ -111,33 +109,7 @@ func (c *Config) GetClient() (*scw.Client, error) {
 	return client, err
 }
 
-// createRetryableHTTPClient create a retryablehttp.Client.
-func createRetryableHTTPClient() *retryablehttp.Client {
-	cl := retryablehttp.NewClient()
-
-	cl.HTTPClient.Transport = logging.NewTransport("Scaleway", cl.HTTPClient.Transport)
-	cl.RetryMax = 3
-	cl.RetryWaitMax = 2 * time.Minute
-	cl.Logger = log.New(os.Stderr, "", 0)
-	cl.RetryWaitMin = time.Minute
-	cl.CheckRetry = func(_ context.Context, resp *http.Response, err error) (bool, error) {
-		if resp == nil {
-			return true, err
-		}
-		if resp.StatusCode == http.StatusTooManyRequests {
-			return true, err
-		}
-		return retryablehttp.DefaultRetryPolicy(context.TODO(), resp, err)
-	}
-
-	return cl
-}
-
-//
-// DEPRECATED ZONE
-//
-
-// client is a bridge between sdk.HTTPClient interface and retryablehttp.Client
+// client is a bridge between scw.httpClient interface and retryablehttp.Client
 type client struct {
 	*retryablehttp.Client
 }
@@ -161,10 +133,36 @@ func (c *client) Do(r *http.Request) (*http.Response, error) {
 	return c.Client.Do(req)
 }
 
+// createRetryableHTTPClient create a retryablehttp.Client.
+func createRetryableHTTPClient() *client {
+	c := retryablehttp.NewClient()
+
+	c.HTTPClient.Transport = logging.NewTransport("Scaleway", c.HTTPClient.Transport)
+	c.RetryMax = 3
+	c.RetryWaitMax = 2 * time.Minute
+	c.Logger = log.New(os.Stderr, "", 0)
+	c.RetryWaitMin = time.Minute
+	c.CheckRetry = func(_ context.Context, resp *http.Response, err error) (bool, error) {
+		if resp == nil {
+			return true, err
+		}
+		if resp.StatusCode == http.StatusTooManyRequests {
+			return true, err
+		}
+		return retryablehttp.DefaultRetryPolicy(context.TODO(), resp, err)
+	}
+
+	return &client{c}
+}
+
+//
+// DEPRECATED ZONE
+//
+
 // GetDeprecatedClient create a new deprecated client from a configuration.
 func (c *Config) GetDeprecatedClient() (*api.API, error) {
 	options := func(sdkApi *api.API) {
-		sdkApi.Client = &client{retryablehttp.NewClient()}
+		sdkApi.Client = createRetryableHTTPClient()
 	}
 
 	// TODO: Replace by a parsing with error handling.
