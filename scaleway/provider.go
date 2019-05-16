@@ -27,7 +27,7 @@ func Provider() terraform.ResourceProvider {
 						log.Printf("[WARN] SCALEWAY_ACCESS_KEY is deprecated, please use SCW_ACCESS_KEY instead")
 						return accessKey, nil
 					}
-					if accessKey, exists := scwConfig.GetAccessKey(); exists {
+					if accessKey, exist := scwConfig.GetAccessKey(); exist {
 						return accessKey, nil
 					}
 					return nil, nil
@@ -39,7 +39,7 @@ func Provider() terraform.ResourceProvider {
 				Description: "The Scaleway secret Key.",
 				DefaultFunc: schema.SchemaDefaultFunc(func() (interface{}, error) {
 					// No error is returned here to allow user to use deprecated `token`.
-					if secretKey, exists := scwConfig.GetSecretKey(); exists {
+					if secretKey, exist := scwConfig.GetSecretKey(); exist {
 						return secretKey, nil
 					}
 					return nil, nil
@@ -68,7 +68,7 @@ func Provider() terraform.ResourceProvider {
 						log.Printf("[WARN] SCALEWAY_REGION is deprecated, please use SCW_DEFAULT_REGION instead")
 						return region, nil
 					}
-					if defaultRegion, exists := scwConfig.GetDefaultRegion(); exists {
+					if defaultRegion, exist := scwConfig.GetDefaultRegion(); exist {
 						return string(defaultRegion), nil
 					}
 					return string(utils.RegionFrPar), nil
@@ -79,7 +79,7 @@ func Provider() terraform.ResourceProvider {
 				Optional:    true,
 				Description: "The Scaleway default zone to use for your resources.",
 				DefaultFunc: schema.SchemaDefaultFunc(func() (interface{}, error) {
-					if defaultZone, exists := scwConfig.GetDefaultZone(); exists {
+					if defaultZone, exist := scwConfig.GetDefaultZone(); exist {
 						return string(defaultZone), nil
 					}
 					return nil, nil
