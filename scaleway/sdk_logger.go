@@ -31,7 +31,7 @@ func (l sdkLogger) Warningf(format string, args ...interface{}) {
 
 // Errorf logs to the ERROR log. Arguments are handled in the manner of fmt.Printf.
 func (l sdkLogger) Errorf(format string, args ...interface{}) {
-	log.Printf("[EROR] "+format, args...)
+	log.Printf("[ERROR] "+format, args...)
 }
 
 // ShouldLog allow the SDK to log only in DEBUG or TRACE levels.
