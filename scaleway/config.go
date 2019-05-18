@@ -47,7 +47,7 @@ type Config struct {
 
 // Meta contains the SDK client and a deprecated version of the SDK temporary.
 //
-// This meta value returned by this function is passed into all resources.
+// This meta value is passed into all resources.
 type Meta struct {
 	client           *scw.Client
 	deprecatedClient *api.API
