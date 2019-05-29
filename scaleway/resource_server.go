@@ -419,7 +419,7 @@ func fetchServerAvailabilities(client *scw.Client) error {
 		return nil
 	}
 
-	instanceAPI := instance.NewApi(client)
+	instanceAPI := instance.NewAPI(client)
 	res, err := instanceAPI.GetServerTypesAvailability(&instance.GetServerTypesAvailabilityRequest{})
 	if err != nil {
 		return fmt.Errorf("error: cannot fetch server availabilities: %s", err)
