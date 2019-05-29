@@ -23,52 +23,15 @@ type ScalewayRequest struct {
 	Ctx     context.Context
 }
 
-// Do performs an HTTP request based on the ScalewayRequest object.
-// RequestOptions (TODO) are executed on the ScalewayRequest.
-func (c *Client) Do(req *ScalewayRequest, opts ...RequestOption) (*http.Response, error) {
-	if req == nil {
-		return nil, fmt.Errorf("request must be non-nil")
-	}
-
-	// apply request options
-	for _, opt := range opts {
-		opt(req)
-	}
-
-	// build url
-	url, err := req.getURL(c.apiURL)
-	if err != nil {
-		return nil, err
-	}
-
-	// build request
-	request, err := http.NewRequest(req.Method, url.String(), req.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	request.Header = req.getAllHeaders(c.auth, c.userAgent)
-	if req.Ctx != nil {
-		request = request.WithContext(req.Ctx)
-	}
-
-	// execute request
-	resp, err := c.httpClient.Do(request)
-	if err != nil {
-		return nil, err
-	}
-
-	err = hasResponseError(resp)
-	if err != nil {
-		return nil, err
-	}
-
-	return resp, nil
-}
-
 // getAllHeaders constructs a http.Header object and aggregates all headers into the object.
-func (req *ScalewayRequest) getAllHeaders(token auth.Auth, userAgent string) http.Header {
-	allHeaders := token.Headers()
+func (req *ScalewayRequest) getAllHeaders(token auth.Auth, userAgent string, anonymized bool) http.Header {
+	var allHeaders http.Header
+	if anonymized {
+		allHeaders = token.AnonymizedHeaders()
+	} else {
+		allHeaders = token.Headers()
+	}
+
 	allHeaders.Set("User-Agent", userAgent)
 	if req.Body != nil {
 		allHeaders.Set("content-type", "application/json")
@@ -78,6 +41,7 @@ func (req *ScalewayRequest) getAllHeaders(token auth.Auth, userAgent string) htt
 			allHeaders.Set(key, v)
 		}
 	}
+
 	return allHeaders
 }
 

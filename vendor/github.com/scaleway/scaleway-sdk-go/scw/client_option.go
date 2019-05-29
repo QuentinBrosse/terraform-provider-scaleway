@@ -11,6 +11,18 @@ import (
 // ClientOption is a function which applies options to a settings object.
 type ClientOption func(*settings)
 
+// httpClient wraps the net/http Client Do method
+type httpClient interface {
+	Do(*http.Request) (*http.Response, error)
+}
+
+// WithHTTPClient client option allows passing a custom http.Client which will be used for all requests.
+func WithHTTPClient(httpClient httpClient) ClientOption {
+	return func(s *settings) {
+		s.httpClient = httpClient
+	}
+}
+
 // WithoutAuth client option sets the client token to an empty token.
 func WithoutAuth() ClientOption {
 	return func(s *settings) {
@@ -46,13 +58,6 @@ func WithUserAgent(ua string) ClientOption {
 	}
 }
 
-// WithHTTPClient client option allows passing a custom http.Client which will be used for all requests.
-func WithHTTPClient(httpClient *http.Client) ClientOption {
-	return func(s *settings) {
-		s.httpClient = httpClient
-	}
-}
-
 // WithConfig client option configure a client with Scaleway configuration.
 func WithConfig(config scwconfig.Config) ClientOption {
 	return func(s *settings) {
@@ -75,17 +80,17 @@ func WithConfig(config scwconfig.Config) ClientOption {
 
 		defaultOrganizationID, exist := config.GetDefaultOrganizationID()
 		if exist {
-			s.defaultOrganizationID = defaultOrganizationID
+			s.defaultOrganizationID = &defaultOrganizationID
 		}
 
 		defaultRegion, exist := config.GetDefaultRegion()
 		if exist {
-			s.defaultRegion = defaultRegion
+			s.defaultRegion = &defaultRegion
 		}
 
 		defaultZone, exist := config.GetDefaultZone()
 		if exist {
-			s.defaultZone = defaultZone
+			s.defaultZone = &defaultZone
 		}
 	}
 }
@@ -95,7 +100,7 @@ func WithConfig(config scwconfig.Config) ClientOption {
 // It will be used as the default value of the organization_id field in all requests made with this client.
 func WithDefaultOrganizationID(organizationID string) ClientOption {
 	return func(s *settings) {
-		s.defaultOrganizationID = organizationID
+		s.defaultOrganizationID = &organizationID
 	}
 }
 
@@ -104,7 +109,7 @@ func WithDefaultOrganizationID(organizationID string) ClientOption {
 // It will be used as the default value of the region field in all requests made with this client.
 func WithDefaultRegion(region utils.Region) ClientOption {
 	return func(s *settings) {
-		s.defaultRegion = region
+		s.defaultRegion = &region
 	}
 }
 
@@ -113,6 +118,15 @@ func WithDefaultRegion(region utils.Region) ClientOption {
 // It will be used as the default value of the zone field in all requests made with this client.
 func WithDefaultZone(zone utils.Zone) ClientOption {
 	return func(s *settings) {
-		s.defaultZone = zone
+		s.defaultZone = &zone
+	}
+}
+
+// WithDefaultPageSize client option overrides the default page size of the SDK.
+//
+// It will be used as the default value of the page_size field in all requests made with this client.
+func WithDefaultPageSize(pageSize int32) ClientOption {
+	return func(s *settings) {
+		s.defaultPageSize = &pageSize
 	}
 }

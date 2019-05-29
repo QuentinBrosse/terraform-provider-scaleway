@@ -34,14 +34,14 @@ var (
 	_ = parameter.AddToQuery
 )
 
-// Api: instance API
-type Api struct {
+// API instance API
+type API struct {
 	client *scw.Client
 }
 
-// NewApi returns a Api object from a Scaleway client.
-func NewApi(client *scw.Client) *Api {
-	return &Api{
+// NewAPI returns a API object from a Scaleway client.
+func NewAPI(client *scw.Client) *API {
+	return &API{
 		client: client,
 	}
 }
@@ -49,11 +49,19 @@ func NewApi(client *scw.Client) *Api {
 type Arch string
 
 const (
-	// ArchX8664 is [insert doc].
-	ArchX8664 = Arch("x86_64")
+	// ArchX86_64 is [insert doc].
+	ArchX86_64 = Arch("x86_64")
 	// ArchArm is [insert doc].
 	ArchArm = Arch("arm")
 )
+
+func (enum Arch) String() string {
+	if enum == "" {
+		// return default value if empty
+		return "x86_64"
+	}
+	return string(enum)
+}
 
 type GetServerTypesAvailabilityResponseAvailability string
 
@@ -66,6 +74,14 @@ const (
 	GetServerTypesAvailabilityResponseAvailabilityShortage = GetServerTypesAvailabilityResponseAvailability("shortage")
 )
 
+func (enum GetServerTypesAvailabilityResponseAvailability) String() string {
+	if enum == "" {
+		// return default value if empty
+		return "available"
+	}
+	return string(enum)
+}
+
 type ImageState string
 
 const (
@@ -77,6 +93,14 @@ const (
 	ImageStateError = ImageState("error")
 )
 
+func (enum ImageState) String() string {
+	if enum == "" {
+		// return default value if empty
+		return "available"
+	}
+	return string(enum)
+}
+
 type SecurityGroupPolicy string
 
 const (
@@ -85,6 +109,14 @@ const (
 	// SecurityGroupPolicyDrop is [insert doc].
 	SecurityGroupPolicyDrop = SecurityGroupPolicy("drop")
 )
+
+func (enum SecurityGroupPolicy) String() string {
+	if enum == "" {
+		// return default value if empty
+		return "accept"
+	}
+	return string(enum)
+}
 
 type SecurityRuleAction string
 
@@ -95,6 +127,14 @@ const (
 	SecurityRuleActionDrop = SecurityRuleAction("drop")
 )
 
+func (enum SecurityRuleAction) String() string {
+	if enum == "" {
+		// return default value if empty
+		return "accept"
+	}
+	return string(enum)
+}
+
 type SecurityRuleDirection string
 
 const (
@@ -104,16 +144,32 @@ const (
 	SecurityRuleDirectionOutbound = SecurityRuleDirection("outbound")
 )
 
+func (enum SecurityRuleDirection) String() string {
+	if enum == "" {
+		// return default value if empty
+		return "inbound"
+	}
+	return string(enum)
+}
+
 type SecurityRuleProtocol string
 
 const (
-	// SecurityRuleProtocolTcp is [insert doc].
-	SecurityRuleProtocolTcp = SecurityRuleProtocol("tcp")
-	// SecurityRuleProtocolUdp is [insert doc].
-	SecurityRuleProtocolUdp = SecurityRuleProtocol("udp")
+	// SecurityRuleProtocolTCP is [insert doc].
+	SecurityRuleProtocolTCP = SecurityRuleProtocol("tcp")
+	// SecurityRuleProtocolUDP is [insert doc].
+	SecurityRuleProtocolUDP = SecurityRuleProtocol("udp")
 	// SecurityRuleProtocolIcmp is [insert doc].
 	SecurityRuleProtocolIcmp = SecurityRuleProtocol("icmp")
 )
+
+func (enum SecurityRuleProtocol) String() string {
+	if enum == "" {
+		// return default value if empty
+		return "tcp"
+	}
+	return string(enum)
+}
 
 type ServerAction string
 
@@ -132,12 +188,28 @@ const (
 	ServerActionReboot = ServerAction("reboot")
 )
 
+func (enum ServerAction) String() string {
+	if enum == "" {
+		// return default value if empty
+		return "poweron"
+	}
+	return string(enum)
+}
+
 type ServerBootType string
 
 const (
 	// ServerBootTypeLocal is [insert doc].
 	ServerBootTypeLocal = ServerBootType("local")
 )
+
+func (enum ServerBootType) String() string {
+	if enum == "" {
+		// return default value if empty
+		return "local"
+	}
+	return string(enum)
+}
 
 type ServerState string
 
@@ -156,6 +228,14 @@ const (
 	ServerStateLocked = ServerState("locked")
 )
 
+func (enum ServerState) String() string {
+	if enum == "" {
+		// return default value if empty
+		return "running"
+	}
+	return string(enum)
+}
+
 type SnapshotState string
 
 const (
@@ -166,6 +246,14 @@ const (
 	// SnapshotStateError is [insert doc].
 	SnapshotStateError = SnapshotState("error")
 )
+
+func (enum SnapshotState) String() string {
+	if enum == "" {
+		// return default value if empty
+		return "available"
+	}
+	return string(enum)
+}
 
 type TaskStatus string
 
@@ -182,6 +270,14 @@ const (
 	TaskStatusRetry = TaskStatus("retry")
 )
 
+func (enum TaskStatus) String() string {
+	if enum == "" {
+		// return default value if empty
+		return "pending"
+	}
+	return string(enum)
+}
+
 type VolumeState string
 
 const (
@@ -192,6 +288,14 @@ const (
 	// VolumeStateError is [insert doc].
 	VolumeStateError = VolumeState("error")
 )
+
+func (enum VolumeState) String() string {
+	if enum == "" {
+		// return default value if empty
+		return "available"
+	}
+	return string(enum)
+}
 
 type VolumeType string
 
@@ -204,37 +308,45 @@ const (
 	VolumeTypeRSsd = VolumeType("r_ssd")
 )
 
+func (enum VolumeType) String() string {
+	if enum == "" {
+		// return default value if empty
+		return "l_ssd"
+	}
+	return string(enum)
+}
+
 type Bootscript struct {
-	// Arch: display the bootscripts arch
+	// Arch display the bootscripts arch
 	Arch Arch `json:"arch,omitempty"`
-	// Bootcmdargs: display the bootscript parameters
+	// Bootcmdargs display the bootscript parameters
 	Bootcmdargs string `json:"bootcmdargs,omitempty"`
-	// Default: dispmay if the bootscript is the default bootscript if no other boot option is configured
+	// Default dispmay if the bootscript is the default bootscript if no other boot option is configured
 	Default bool `json:"default,omitempty"`
-	// Dtb: provide information regarding a Device Tree Binary (dtb) for use with C1 servers
+	// Dtb provide information regarding a Device Tree Binary (dtb) for use with C1 servers
 	Dtb string `json:"dtb,omitempty"`
-	// Id: display the bootscripts ID
-	Id string `json:"id,omitempty"`
-	// Initrd: display the initrd (initial ramdisk) configuration
+	// ID display the bootscripts ID
+	ID string `json:"id,omitempty"`
+	// Initrd display the initrd (initial ramdisk) configuration
 	Initrd string `json:"initrd,omitempty"`
-	// Kernel: display the server kernel version
+	// Kernel display the server kernel version
 	Kernel string `json:"kernel,omitempty"`
-	// Organization: display the bootscripts organization
+	// Organization display the bootscripts organization
 	Organization string `json:"organization,omitempty"`
-	// Public: provide information if the bootscript is public
+	// Public provide information if the bootscript is public
 	Public bool `json:"public,omitempty"`
-	// Title: display the bootscripts title
+	// Title display the bootscripts title
 	Title string `json:"title,omitempty"`
 }
 
-type CreateImageResponse struct {
-	Image *Image `json:"image,omitempty"`
+type CreateIPResponse struct {
+	IP *IP `json:"ip,omitempty"`
 
 	Location string `json:"Location,omitempty"`
 }
 
-type CreateIpResponse struct {
-	Ip *Ip `json:"ip,omitempty"`
+type CreateImageResponse struct {
+	Image *Image `json:"image,omitempty"`
 
 	Location string `json:"Location,omitempty"`
 }
@@ -289,12 +401,12 @@ type GetDashboardResponse struct {
 	Dashboard *Dashboard `json:"dashboard,omitempty"`
 }
 
-type GetImageResponse struct {
-	Image *Image `json:"image,omitempty"`
+type GetIPResponse struct {
+	IP *IP `json:"ip,omitempty"`
 }
 
-type GetIpResponse struct {
-	Ip *Ip `json:"ip,omitempty"`
+type GetImageResponse struct {
+	Image *Image `json:"image,omitempty"`
 }
 
 type GetSecurityGroupResponse struct {
@@ -314,7 +426,7 @@ type GetServerTypesAvailabilityResponse struct {
 }
 
 type GetServiceInfoResponse struct {
-	Api string `json:"api,omitempty"`
+	API string `json:"api,omitempty"`
 
 	Description string `json:"description,omitempty"`
 
@@ -329,8 +441,20 @@ type GetVolumeResponse struct {
 	Volume *Volume `json:"volume,omitempty"`
 }
 
+type IP struct {
+	ID string `json:"id,omitempty"`
+
+	Address net.IP `json:"address,omitempty"`
+
+	Reverse string `json:"reverse,omitempty"`
+
+	Server *ServerSummary `json:"server,omitempty"`
+
+	Organization string `json:"organization,omitempty"`
+}
+
 type Image struct {
-	Id string `json:"id,omitempty"`
+	ID string `json:"id,omitempty"`
 
 	Name string `json:"name,omitempty"`
 
@@ -355,18 +479,6 @@ type Image struct {
 	State ImageState `json:"state,omitempty"`
 }
 
-type Ip struct {
-	Id string `json:"id,omitempty"`
-
-	Address net.IP `json:"address,omitempty"`
-
-	Reverse string `json:"reverse,omitempty"`
-
-	Server string `json:"server,omitempty"`
-
-	Organization string `json:"organization,omitempty"`
-}
-
 type ListBootscriptsResponse struct {
 	Bootscripts []*Bootscript `json:"bootscripts,omitempty"`
 }
@@ -376,7 +488,7 @@ type ListImagesResponse struct {
 }
 
 type ListIpsResponse struct {
-	Ips []*Ip `json:"ips,omitempty"`
+	Ips []*IP `json:"ips,omitempty"`
 }
 
 type ListSecurityGroupRulesResponse struct {
@@ -412,40 +524,40 @@ type ListVolumesResponse struct {
 }
 
 type SecurityGroup struct {
-	// Id: display the security groups' unique ID
-	Id string `json:"id,omitempty"`
-	// Name: display the security groups name
+	// ID display the security groups' unique ID
+	ID string `json:"id,omitempty"`
+	// Name display the security groups name
 	Name string `json:"name,omitempty"`
-	// CreationDate: display the security group creation date
+	// CreationDate display the security group creation date
 	CreationDate time.Time `json:"creation_date,omitempty"`
-	// ModificationDate: display the security group modification date
+	// ModificationDate display the security group modification date
 	ModificationDate time.Time `json:"modification_date,omitempty"`
-	// Description: display the security groups description
+	// Description display the security groups description
 	Description string `json:"description,omitempty"`
-	// EnableDefaultSecurity: display if the security group is set as default
+	// EnableDefaultSecurity display if the security group is set as default
 	EnableDefaultSecurity bool `json:"enable_default_security,omitempty"`
-	// InboundDefaultPolicy: display the default inbound policy
+	// InboundDefaultPolicy display the default inbound policy
 	InboundDefaultPolicy SecurityGroupPolicy `json:"inbound_default_policy,omitempty"`
-	// Organization: display the security groups organization ID
+	// Organization display the security groups organization ID
 	Organization string `json:"organization,omitempty"`
-	// OrganizationDefault: display if the security group is set as organization default
+	// OrganizationDefault display if the security group is set as organization default
 	OrganizationDefault bool `json:"organization_default,omitempty"`
-	// OutboundDefaultPolicy: display the default outbound policy
+	// OutboundDefaultPolicy display the default outbound policy
 	OutboundDefaultPolicy SecurityGroupPolicy `json:"outbound_default_policy,omitempty"`
-	// Servers: list of servers attached to this security group
+	// Servers list of servers attached to this security group
 	Servers map[string]*ServerSummary `json:"servers,omitempty"`
-	// Stateful: true if the security group is stateful
+	// Stateful true if the security group is stateful
 	Stateful bool `json:"stateful,omitempty"`
 }
 
 type SecurityGroupSummary struct {
-	Id string `json:"id,omitempty"`
+	ID string `json:"id,omitempty"`
 
 	Name string `json:"name,omitempty"`
 }
 
 type SecurityRule struct {
-	Id string `json:"id,omitempty"`
+	ID string `json:"id,omitempty"`
 
 	Protocol SecurityRuleProtocol `json:"protocol,omitempty"`
 
@@ -453,7 +565,7 @@ type SecurityRule struct {
 
 	Action SecurityRuleAction `json:"action,omitempty"`
 
-	IpRange string `json:"ip_range,omitempty"`
+	IPRange string `json:"ip_range,omitempty"`
 
 	DestPortFrom uint32 `json:"dest_port_from,omitempty"`
 
@@ -465,59 +577,59 @@ type SecurityRule struct {
 }
 
 type Server struct {
-	// Id: display the server unique ID
-	Id string `json:"id,omitempty"`
-	// Image: provide information on the server image
+	// ID display the server unique ID
+	ID string `json:"id,omitempty"`
+	// Image provide information on the server image
 	Image *Image `json:"image,omitempty"`
-	// Name: display the server name
+	// Name display the server name
 	Name string `json:"name,omitempty"`
-	// Organization: display the server organization
+	// Organization display the server organization
 	Organization string `json:"organization,omitempty"`
-	// PrivateIp: display the server private IP address
-	PrivateIp *string `json:"private_ip,omitempty"`
-	// PublicIp: display the server public IP address
-	PublicIp *ServerIp `json:"public_ip,omitempty"`
-	// State: display the server state
+	// PrivateIP display the server private IP address
+	PrivateIP *string `json:"private_ip,omitempty"`
+	// PublicIP display the server public IP address
+	PublicIP *ServerIP `json:"public_ip,omitempty"`
+	// State display the server state
 	State ServerState `json:"state,omitempty"`
-	// BootType: display the server boot type
+	// BootType display the server boot type
 	BootType ServerBootType `json:"boot_type,omitempty"`
-	// Tags: display the server associated tags
+	// Tags display the server associated tags
 	Tags []string `json:"tags,omitempty"`
-	// Volumes: display the server volumes
+	// Volumes display the server volumes
 	Volumes map[string]*Volume `json:"volumes,omitempty"`
-	// Bootscript: display the server bootscript
+	// Bootscript display the server bootscript
 	Bootscript *Bootscript `json:"bootscript,omitempty"`
-	// DynamicPublicIp: display the server dynamic public IP
-	DynamicPublicIp bool `json:"dynamic_public_ip,omitempty"`
-	// CommercialType: display the server commercial type (e.g. GP1-M)
+	// DynamicPublicIP display the server dynamic public IP
+	DynamicPublicIP bool `json:"dynamic_public_ip,omitempty"`
+	// CommercialType display the server commercial type (e.g. GP1-M)
 	CommercialType string `json:"commercial_type,omitempty"`
-	// CreationDate: display the server creation date
+	// CreationDate display the server creation date
 	CreationDate time.Time `json:"creation_date,omitempty"`
-	// DynamicIpRequired: display if a dynamic IP is required
-	DynamicIpRequired bool `json:"dynamic_ip_required,omitempty"`
-	// EnableIpv6: display if IPv6 is enabled
-	EnableIpv6 bool `json:"enable_ipv6,omitempty"`
-	// ExtraNetworks: display information about additional network interfaces
+	// DynamicIPRequired display if a dynamic IP is required
+	DynamicIPRequired bool `json:"dynamic_ip_required,omitempty"`
+	// EnableIPv6 display if IPv6 is enabled
+	EnableIPv6 bool `json:"enable_ipv6,omitempty"`
+	// ExtraNetworks display information about additional network interfaces
 	ExtraNetworks []string `json:"extra_networks,omitempty"`
-	// Hostname: display the server host name
+	// Hostname display the server host name
 	Hostname string `json:"hostname,omitempty"`
-	// AllowedActions: provide as list of allowed actions on the server
+	// AllowedActions provide as list of allowed actions on the server
 	AllowedActions []ServerAction `json:"allowed_actions,omitempty"`
-	// Arch: display the server arch
+	// Arch display the server arch
 	Arch Arch `json:"arch,omitempty"`
-	// Ipv6: display the server IPv6 address
-	Ipv6 *ServerIpv6 `json:"ipv6,omitempty"`
-	// Location: display the server location
+	// IPv6 display the server IPv6 address
+	IPv6 *ServerIPv6 `json:"ipv6,omitempty"`
+	// Location display the server location
 	Location *ServerLocation `json:"location,omitempty"`
-	// Maintenances: display the server planned maintenances
+	// Maintenances display the server planned maintenances
 	Maintenances []*ServerMaintenance `json:"maintenances,omitempty"`
-	// ModificationDate: display the server modification date
+	// ModificationDate display the server modification date
 	ModificationDate time.Time `json:"modification_date,omitempty"`
-	// Protected: display the server protection option is activated
+	// Protected display the server protection option is activated
 	Protected bool `json:"protected,omitempty"`
-	// SecurityGroup: display the server security group
+	// SecurityGroup display the server security group
 	SecurityGroup *SecurityGroupSummary `json:"security_group,omitempty"`
-	// StateDetail: display the server state_detail
+	// StateDetail display the server state_detail
 	StateDetail string `json:"state_detail,omitempty"`
 }
 
@@ -525,41 +637,41 @@ type ServerActionResponse struct {
 	Task *Task `json:"task,omitempty"`
 }
 
-type ServerIp struct {
-	// Id: display the unique ID of the IP address
-	Id string `json:"id,omitempty"`
-	// Address: display the server public IPv4 IP-Address
+type ServerIP struct {
+	// ID display the unique ID of the IP address
+	ID string `json:"id,omitempty"`
+	// Address display the server public IPv4 IP-Address
 	Address net.IP `json:"address,omitempty"`
-	// Dynamic: display information if the IP address will be considered as dynamic
+	// Dynamic display information if the IP address will be considered as dynamic
 	Dynamic bool `json:"dynamic,omitempty"`
 }
 
-type ServerIpv6 struct {
-	// Address: display the server IPv6 IP-Address
+type ServerIPv6 struct {
+	// Address display the server IPv6 IP-Address
 	Address net.IP `json:"address,omitempty"`
-	// Gateway: display the IPv6 IP-addresses gateway
+	// Gateway display the IPv6 IP-addresses gateway
 	Gateway string `json:"gateway,omitempty"`
-	// Netmask: display the IPv6 IP-addresses CIDR netmask
+	// Netmask display the IPv6 IP-addresses CIDR netmask
 	Netmask string `json:"netmask,omitempty"`
 }
 
 type ServerLocation struct {
-	ClusterId string `json:"cluster_id,omitempty"`
+	ClusterID string `json:"cluster_id,omitempty"`
 
-	HypervisorId string `json:"hypervisor_id,omitempty"`
+	HypervisorID string `json:"hypervisor_id,omitempty"`
 
-	NodeId string `json:"node_id,omitempty"`
+	NodeID string `json:"node_id,omitempty"`
 
-	PlatformId string `json:"platform_id,omitempty"`
+	PlatformID string `json:"platform_id,omitempty"`
 
-	ZoneId string `json:"zone_id,omitempty"`
+	ZoneID string `json:"zone_id,omitempty"`
 }
 
 type ServerMaintenance struct {
 }
 
 type ServerSummary struct {
-	Id string `json:"id,omitempty"`
+	ID string `json:"id,omitempty"`
 
 	Name string `json:"name,omitempty"`
 }
@@ -579,7 +691,7 @@ type ServerTypeDefinition struct {
 
 	Gpu *uint64 `json:"gpu,omitempty"`
 
-	Ram uint64 `json:"ram,omitempty"`
+	RAM uint64 `json:"ram,omitempty"`
 
 	Arch Arch `json:"arch,omitempty"`
 
@@ -595,7 +707,7 @@ type ServerTypeDefinitionNetwork struct {
 
 	SumInternetBandwidth *uint64 `json:"sum_internet_bandwidth,omitempty"`
 
-	Ipv6Support bool `json:"ipv6_support,omitempty"`
+	IPv6Support bool `json:"ipv6_support,omitempty"`
 }
 
 type ServerTypeDefinitionNetworkInterface struct {
@@ -610,12 +722,12 @@ type ServerTypeDefinitionVolumeConstraintSizes struct {
 	MaxSize uint64 `json:"max_size,omitempty"`
 }
 
-type SetImageResponse struct {
-	Image *Image `json:"image,omitempty"`
+type SetIPResponse struct {
+	IP *IP `json:"ip,omitempty"`
 }
 
-type SetIpResponse struct {
-	Ip *Ip `json:"ip,omitempty"`
+type SetImageResponse struct {
+	Image *Image `json:"image,omitempty"`
 }
 
 type SetServerResponse struct {
@@ -631,7 +743,7 @@ type SetVolumeResponse struct {
 }
 
 type Snapshot struct {
-	Id string `json:"id,omitempty"`
+	ID string `json:"id,omitempty"`
 
 	Name string `json:"name,omitempty"`
 
@@ -651,32 +763,32 @@ type Snapshot struct {
 }
 
 type SnapshotBaseVolume struct {
-	Id string `json:"id,omitempty"`
+	ID string `json:"id,omitempty"`
 
 	Name string `json:"name,omitempty"`
 }
 
 type Task struct {
-	// Id: the unique ID of the task
-	Id string `json:"id,omitempty"`
-	// Description: the description of the task
+	// ID the unique ID of the task
+	ID string `json:"id,omitempty"`
+	// Description the description of the task
 	Description string `json:"description,omitempty"`
 
 	HrefFrom string `json:"href_from,omitempty"`
 
 	HrefResult string `json:"href_result,omitempty"`
-	// Progress: show the progress of the task in percent
+	// Progress show the progress of the task in percent
 	Progress int32 `json:"progress,omitempty"`
-	// StartedAt: display the task start date
+	// StartedAt display the task start date
 	StartedAt time.Time `json:"started_at,omitempty"`
-	// Status: display the task status
+	// Status display the task status
 	Status TaskStatus `json:"status,omitempty"`
-	// TerminatedAt: display the task end date
+	// TerminatedAt display the task end date
 	TerminatedAt time.Time `json:"terminated_at,omitempty"`
 }
 
-type UpdateIpResponse struct {
-	Ip *Ip `json:"ip,omitempty"`
+type UpdateIPResponse struct {
+	IP *IP `json:"ip,omitempty"`
 }
 
 type UpdateSecurityGroupResponse struct {
@@ -688,42 +800,42 @@ type UpdateServerResponse struct {
 }
 
 type Volume struct {
-	// Id: display the volumes unique ID
-	Id string `json:"id,omitempty"`
-	// Name: display the volumes names
+	// ID display the volumes unique ID
+	ID string `json:"id,omitempty"`
+	// Name display the volumes names
 	Name string `json:"name,omitempty"`
-	// ExportUri: show the volumes NBD export URI
-	ExportUri string `json:"export_uri,omitempty"`
-	// Organization: display the volumes organization
+	// ExportURI show the volumes NBD export URI
+	ExportURI string `json:"export_uri,omitempty"`
+	// Organization display the volumes organization
 	Organization string `json:"organization,omitempty"`
-	// Server: display information about the server attached to the volume
+	// Server display information about the server attached to the volume
 	Server *ServerSummary `json:"server,omitempty"`
-	// Size: display the volumes disk size
+	// Size display the volumes disk size
 	Size uint64 `json:"size,omitempty"`
-	// VolumeType: display the volumes type
+	// VolumeType display the volumes type
 	VolumeType VolumeType `json:"volume_type,omitempty"`
-	// CreationDate: display the volumes creation date
+	// CreationDate display the volumes creation date
 	CreationDate time.Time `json:"creation_date,omitempty"`
-	// ModificationDate: display the volumes modification date
+	// ModificationDate display the volumes modification date
 	ModificationDate time.Time `json:"modification_date,omitempty"`
-	// State: display the volumes state
+	// State display the volumes state
 	State VolumeState `json:"state,omitempty"`
 }
 
 type VolumeTemplate struct {
-	// Id: display the volumes unique ID
-	Id string `json:"id,omitempty"`
-	// Name: display the volumes name
+	// ID display the volumes unique ID
+	ID string `json:"id,omitempty"`
+	// Name display the volumes name
 	Name string `json:"name,omitempty"`
-	// Size: display the volumes disk size
+	// Size display the volumes disk size
 	Size uint64 `json:"size,omitempty"`
-	// VolumeType: display the volumes type
+	// VolumeType display the volumes type
 	VolumeType VolumeType `json:"volume_type,omitempty"`
-	// Organization: the organization ID
+	// Organization the organization ID
 	Organization string `json:"organization,omitempty"`
 }
 
-// Service Api
+// Service API
 
 type GetServerTypesAvailabilityRequest struct {
 	Zone utils.Zone `json:"-"`
@@ -733,15 +845,22 @@ type GetServerTypesAvailabilityRequest struct {
 	Page *int32 `json:"-"`
 }
 
-// GetServerTypesAvailability: get availability
+// GetServerTypesAvailability get availability
 //
 // Get availibility for all server types
-func (s *Api) GetServerTypesAvailability(req *GetServerTypesAvailabilityRequest, opts ...scw.RequestOption) (*GetServerTypesAvailabilityResponse, error) {
+func (s *API) GetServerTypesAvailability(req *GetServerTypesAvailabilityRequest, opts ...scw.RequestOption) (*GetServerTypesAvailabilityResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
+
+	defaultPerPage, exist := s.client.GetDefaultPageSize()
+	if (req.PerPage == nil || *req.PerPage == 0) && exist {
+		req.PerPage = &defaultPerPage
+	}
+
 	query := url.Values{}
 	parameter.AddToQuery(query, "per_page", req.PerPage)
 	parameter.AddToQuery(query, "page", req.Page)
@@ -753,14 +872,9 @@ func (s *Api) GetServerTypesAvailability(req *GetServerTypesAvailabilityRequest,
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp GetServerTypesAvailabilityResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -775,15 +889,22 @@ type ListServersTypesRequest struct {
 	Page *int32 `json:"-"`
 }
 
-// ListServersTypes: list server types
+// ListServersTypes list server types
 //
 // Get server types technical details
-func (s *Api) ListServersTypes(req *ListServersTypesRequest, opts ...scw.RequestOption) (*ListServersTypesResponse, error) {
+func (s *API) ListServersTypes(req *ListServersTypesRequest, opts ...scw.RequestOption) (*ListServersTypesResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
+
+	defaultPerPage, exist := s.client.GetDefaultPageSize()
+	if (req.PerPage == nil || *req.PerPage == 0) && exist {
+		req.PerPage = &defaultPerPage
+	}
+
 	query := url.Values{}
 	parameter.AddToQuery(query, "per_page", req.PerPage)
 	parameter.AddToQuery(query, "page", req.Page)
@@ -795,14 +916,9 @@ func (s *Api) ListServersTypes(req *ListServersTypesRequest, opts ...scw.Request
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp ListServersTypesResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -819,18 +935,25 @@ type ListServersRequest struct {
 	Page *int32 `json:"-"`
 }
 
-// ListServers: list servers
-func (s *Api) ListServers(req *ListServersRequest, opts ...scw.RequestOption) (*ListServersResponse, error) {
+// ListServers list servers
+func (s *API) ListServers(req *ListServersRequest, opts ...scw.RequestOption) (*ListServersResponse, error) {
 	var err error
 
-	val := s.client.GetDefaultOrganizationID()
-	if req.Organization == nil || *req.Organization == "" {
-		req.Organization = &val
+	defaultOrganization, exist := s.client.GetDefaultOrganizationID()
+	if (req.Organization == nil || *req.Organization == "") && exist {
+		req.Organization = &defaultOrganization
 	}
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
+
+	defaultPerPage, exist := s.client.GetDefaultPageSize()
+	if (req.PerPage == nil || *req.PerPage == 0) && exist {
+		req.PerPage = &defaultPerPage
+	}
+
 	query := url.Values{}
 	parameter.AddToQuery(query, "organization", req.Organization)
 	parameter.AddToQuery(query, "per_page", req.PerPage)
@@ -843,14 +966,9 @@ func (s *Api) ListServers(req *ListServersRequest, opts ...scw.RequestOption) (*
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp ListServersResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -859,36 +977,40 @@ func (s *Api) ListServers(req *ListServersRequest, opts ...scw.RequestOption) (*
 
 type CreateServerRequest struct {
 	Zone utils.Zone `json:"-"`
-	// Name: display the server name
+	// Name display the server name
 	Name string `json:"name,omitempty"`
-	// DynamicIpRequired: define if a dynamic IP is required for the instance
-	DynamicIpRequired bool `json:"dynamic_ip_required,omitempty"`
-	// CommercialType: define the server commercial type (i.e. GP1-S)
+	// DynamicIPRequired define if a dynamic IP is required for the instance
+	DynamicIPRequired bool `json:"dynamic_ip_required,omitempty"`
+	// CommercialType define the server commercial type (i.e. GP1-S)
 	CommercialType string `json:"commercial_type,omitempty"`
-	// Image: define the server image id
+	// Image define the server image id
 	Image string `json:"image,omitempty"`
-	// Volumes: define the volumes attached to the server
+	// Volumes define the volumes attached to the server
 	Volumes map[string]*VolumeTemplate `json:"volumes,omitempty"`
-	// EnableIpv6: define if IPv6 is enabled on the server
-	EnableIpv6 bool `json:"enable_ipv6,omitempty"`
-	// PublicIp: define the public IPv4 attached to the server
-	PublicIp string `json:"public_ip,omitempty"`
-	// BootType: define the boot type you want to use
+	// EnableIPv6 define if IPv6 is enabled on the server
+	EnableIPv6 bool `json:"enable_ipv6,omitempty"`
+	// PublicIP define the public IPv4 attached to the server
+	PublicIP string `json:"public_ip,omitempty"`
+	// BootType define the boot type you want to use
 	BootType ServerBootType `json:"boot_type,omitempty"`
-	// Organization: define the server organization
+	// Organization define the server organization
 	Organization string `json:"organization,omitempty"`
+	// Tags define the server tags
+	Tags []string `json:"tags,omitempty"`
 }
 
-// CreateServer: create server
-func (s *Api) CreateServer(req *CreateServerRequest, opts ...scw.RequestOption) (*CreateServerResponse, error) {
+// CreateServer create server
+func (s *API) CreateServer(req *CreateServerRequest, opts ...scw.RequestOption) (*CreateServerResponse, error) {
 	var err error
 
 	if req.Organization == "" {
-		req.Organization = s.client.GetDefaultOrganizationID()
+		defaultOrganization, _ := s.client.GetDefaultOrganizationID()
+		req.Organization = defaultOrganization
 	}
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
@@ -896,19 +1018,15 @@ func (s *Api) CreateServer(req *CreateServerRequest, opts ...scw.RequestOption) 
 		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers",
 		Headers: http.Header{},
 	}
+
 	err = scwReq.SetBody(req)
 	if err != nil {
 		return nil, err
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp CreateServerResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -918,27 +1036,27 @@ func (s *Api) CreateServer(req *CreateServerRequest, opts ...scw.RequestOption) 
 type DeleteServerRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	ServerId string `json:"-"`
+	ServerID string `json:"-"`
 }
 
-// DeleteServer: delete server
+// DeleteServer delete server
 //
 // Delete a server with the given id
-func (s *Api) DeleteServer(req *DeleteServerRequest, opts ...scw.RequestOption) error {
+func (s *API) DeleteServer(req *DeleteServerRequest, opts ...scw.RequestOption) error {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "DELETE",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ServerId) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ServerID) + "",
 		Headers: http.Header{},
 	}
 
-	_, err = s.client.Do(scwReq, opts...)
-
+	err = s.client.Do(scwReq, nil, opts...)
 	if err != nil {
 		return err
 	}
@@ -948,33 +1066,29 @@ func (s *Api) DeleteServer(req *DeleteServerRequest, opts ...scw.RequestOption) 
 type GetServerRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	ServerId string `json:"-"`
+	ServerID string `json:"-"`
 }
 
-// GetServer: get server
+// GetServer get server
 //
 // Get the details of a specified Server
-func (s *Api) GetServer(req *GetServerRequest, opts ...scw.RequestOption) (*GetServerResponse, error) {
+func (s *API) GetServer(req *GetServerRequest, opts ...scw.RequestOption) (*GetServerResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "GET",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ServerId) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ServerID) + "",
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp GetServerResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -983,91 +1097,89 @@ func (s *Api) GetServer(req *GetServerRequest, opts ...scw.RequestOption) (*GetS
 
 type SetServerRequest struct {
 	Zone utils.Zone `json:"-"`
-	// Id: display the server unique ID
-	Id string `json:"-"`
-	// Name: display the server name
+	// ID display the server unique ID
+	ID string `json:"-"`
+	// Name display the server name
 	Name string `json:"name,omitempty"`
-	// Organization: display the server organization
+	// Organization display the server organization
 	Organization string `json:"organization,omitempty"`
-	// AllowedActions: provide as list of allowed actions on the server
+	// AllowedActions provide as list of allowed actions on the server
 	AllowedActions []ServerAction `json:"allowed_actions,omitempty"`
-	// Tags: display the server associated tags
+	// Tags display the server associated tags
 	Tags []string `json:"tags,omitempty"`
-	// CommercialType: display the server commercial type (e.g. GP1-M)
+	// CommercialType display the server commercial type (e.g. GP1-M)
 	CommercialType string `json:"commercial_type,omitempty"`
-	// CreationDate: display the server creation date
+	// CreationDate display the server creation date
 	CreationDate time.Time `json:"creation_date,omitempty"`
-	// DynamicIpRequired: display if a dynamic IP is required
-	DynamicIpRequired bool `json:"dynamic_ip_required,omitempty"`
-	// DynamicPublicIp: display the server dynamic public IP
-	DynamicPublicIp bool `json:"dynamic_public_ip,omitempty"`
-	// EnableIpv6: display if IPv6 is enabled
-	EnableIpv6 bool `json:"enable_ipv6,omitempty"`
-	// ExtraNetworks: display information about additional network interfaces
+	// DynamicIPRequired display if a dynamic IP is required
+	DynamicIPRequired bool `json:"dynamic_ip_required,omitempty"`
+	// DynamicPublicIP display the server dynamic public IP
+	DynamicPublicIP bool `json:"dynamic_public_ip,omitempty"`
+	// EnableIPv6 display if IPv6 is enabled
+	EnableIPv6 bool `json:"enable_ipv6,omitempty"`
+	// ExtraNetworks display information about additional network interfaces
 	ExtraNetworks []string `json:"extra_networks,omitempty"`
-	// Hostname: display the server host name
+	// Hostname display the server host name
 	Hostname string `json:"hostname,omitempty"`
-	// Image: provide information on the server image
+	// Image provide information on the server image
 	Image *Image `json:"image,omitempty"`
-	// Protected: display the server protection option is activated
+	// Protected display the server protection option is activated
 	Protected bool `json:"protected,omitempty"`
-	// PrivateIp: display the server private IP address
-	PrivateIp *string `json:"private_ip,omitempty"`
-	// PublicIp: display the server public IP address
-	PublicIp *ServerIp `json:"public_ip,omitempty"`
-	// ModificationDate: display the server modification date
+	// PrivateIP display the server private IP address
+	PrivateIP *string `json:"private_ip,omitempty"`
+	// PublicIP display the server public IP address
+	PublicIP *ServerIP `json:"public_ip,omitempty"`
+	// ModificationDate display the server modification date
 	ModificationDate time.Time `json:"modification_date,omitempty"`
-	// State: display the server state
+	// State display the server state
 	State ServerState `json:"state,omitempty"`
-	// Location: display the server location
+	// Location display the server location
 	Location *ServerLocation `json:"location,omitempty"`
-	// Ipv6: display the server IPv6 address
-	Ipv6 *ServerIpv6 `json:"ipv6,omitempty"`
-	// Bootscript: display the server bootscript
+	// IPv6 display the server IPv6 address
+	IPv6 *ServerIPv6 `json:"ipv6,omitempty"`
+	// Bootscript display the server bootscript
 	Bootscript *Bootscript `json:"bootscript,omitempty"`
-	// BootType: display the server boot type
+	// BootType display the server boot type
 	BootType ServerBootType `json:"boot_type,omitempty"`
-	// Volumes: display the server volumes
+	// Volumes display the server volumes
 	Volumes map[string]*Volume `json:"volumes,omitempty"`
-	// SecurityGroup: display the server security group
+	// SecurityGroup display the server security group
 	SecurityGroup *SecurityGroupSummary `json:"security_group,omitempty"`
-	// Maintenances: display the server planned maintenances
+	// Maintenances display the server planned maintenances
 	Maintenances []*ServerMaintenance `json:"maintenances,omitempty"`
-	// StateDetail: display the server state_detail
+	// StateDetail display the server state_detail
 	StateDetail string `json:"state_detail,omitempty"`
-	// Arch: display the server arch
+	// Arch display the server arch
 	Arch Arch `json:"arch,omitempty"`
 }
 
-func (s *Api) SetServer(req *SetServerRequest, opts ...scw.RequestOption) (*SetServerResponse, error) {
+func (s *API) SetServer(req *SetServerRequest, opts ...scw.RequestOption) (*SetServerResponse, error) {
 	var err error
 
 	if req.Organization == "" {
-		req.Organization = s.client.GetDefaultOrganizationID()
+		defaultOrganization, _ := s.client.GetDefaultOrganizationID()
+		req.Organization = defaultOrganization
 	}
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "PUT",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.Id) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ID) + "",
 		Headers: http.Header{},
 	}
+
 	err = scwReq.SetBody(req)
 	if err != nil {
 		return nil, err
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp SetServerResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1077,7 +1189,7 @@ func (s *Api) SetServer(req *SetServerRequest, opts ...scw.RequestOption) (*SetS
 type UpdateServerRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	ServerId string `json:"-"`
+	ServerID string `json:"-"`
 
 	Name *string `json:"name,omitempty"`
 
@@ -1085,47 +1197,44 @@ type UpdateServerRequest struct {
 
 	Tags *[]string `json:"tags,omitempty"`
 
-	Volumes map[string]*VolumeTemplate `json:"volumes,omitempty"`
+	Volumes *map[string]*VolumeTemplate `json:"volumes,omitempty"`
 
 	Bootscript *Bootscript `json:"bootscript,omitempty"`
 
-	DynamicIpRequired *bool `json:"dynamic_ip_required,omitempty"`
+	DynamicIPRequired *bool `json:"dynamic_ip_required,omitempty"`
 
-	EnableIpv6 *bool `json:"enable_ipv6,omitempty"`
+	EnableIPv6 *bool `json:"enable_ipv6,omitempty"`
 
 	ExtraNetworks *[]string `json:"extra_networks,omitempty"`
 
-	Protected bool `json:"protected,omitempty"`
+	Protected *bool `json:"protected,omitempty"`
 
 	SecurityGroup *SecurityGroupSummary `json:"security_group,omitempty"`
 }
 
-// UpdateServer: update server
-func (s *Api) UpdateServer(req *UpdateServerRequest, opts ...scw.RequestOption) (*UpdateServerResponse, error) {
+// UpdateServer update server
+func (s *API) UpdateServer(req *UpdateServerRequest, opts ...scw.RequestOption) (*UpdateServerResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "PATCH",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ServerId) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ServerID) + "",
 		Headers: http.Header{},
 	}
+
 	err = scwReq.SetBody(req)
 	if err != nil {
 		return nil, err
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp UpdateServerResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1135,33 +1244,29 @@ func (s *Api) UpdateServer(req *UpdateServerRequest, opts ...scw.RequestOption) 
 type ListServerActionsRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	ServerId string `json:"-"`
+	ServerID string `json:"-"`
 }
 
-// ListServerActions: list server actions
+// ListServerActions list server actions
 //
 // Liste all actions that can currently be performed on a server
-func (s *Api) ListServerActions(req *ListServerActionsRequest, opts ...scw.RequestOption) (*ListServerActionsResponse, error) {
+func (s *API) ListServerActions(req *ListServerActionsRequest, opts ...scw.RequestOption) (*ListServerActionsResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "GET",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ServerId) + "/action",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ServerID) + "/action",
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp ListServerActionsResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1171,39 +1276,36 @@ func (s *Api) ListServerActions(req *ListServerActionsRequest, opts ...scw.Reque
 type ServerActionRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	ServerId string `json:"-"`
+	ServerID string `json:"-"`
 
 	Action ServerAction `json:"action,omitempty"`
 }
 
-// ServerAction: perform action
+// ServerAction perform action
 //
 // Perform power related actions on a server
-func (s *Api) ServerAction(req *ServerActionRequest, opts ...scw.RequestOption) (*ServerActionResponse, error) {
+func (s *API) ServerAction(req *ServerActionRequest, opts ...scw.RequestOption) (*ServerActionResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "POST",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ServerId) + "/action",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ServerID) + "/action",
 		Headers: http.Header{},
 	}
+
 	err = scwReq.SetBody(req)
 	if err != nil {
 		return nil, err
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp ServerActionResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1213,33 +1315,29 @@ func (s *Api) ServerAction(req *ServerActionRequest, opts ...scw.RequestOption) 
 type ListServerUserDataRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	ServerId string `json:"-"`
+	ServerID string `json:"-"`
 }
 
-// ListServerUserData: list user data
+// ListServerUserData list user data
 //
 // List all user data keys register on a given server
-func (s *Api) ListServerUserData(req *ListServerUserDataRequest, opts ...scw.RequestOption) (*ListServerUserDataResponse, error) {
+func (s *API) ListServerUserData(req *ListServerUserDataRequest, opts ...scw.RequestOption) (*ListServerUserDataResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "GET",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ServerId) + "/user_data",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ServerID) + "/user_data",
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp ListServerUserDataResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1249,29 +1347,29 @@ func (s *Api) ListServerUserData(req *ListServerUserDataRequest, opts ...scw.Req
 type DeleteServerUserDataRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	ServerId string `json:"-"`
+	ServerID string `json:"-"`
 
 	Key string `json:"-"`
 }
 
-// DeleteServerUserData: delete user data
+// DeleteServerUserData delete user data
 //
 // Delete the given key from a server user data
-func (s *Api) DeleteServerUserData(req *DeleteServerUserDataRequest, opts ...scw.RequestOption) error {
+func (s *API) DeleteServerUserData(req *DeleteServerUserDataRequest, opts ...scw.RequestOption) error {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "DELETE",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ServerId) + "/user_data/" + fmt.Sprint(req.Key) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ServerID) + "/user_data/" + fmt.Sprint(req.Key) + "",
 		Headers: http.Header{},
 	}
 
-	_, err = s.client.Do(scwReq, opts...)
-
+	err = s.client.Do(scwReq, nil, opts...)
 	if err != nil {
 		return err
 	}
@@ -1281,35 +1379,36 @@ func (s *Api) DeleteServerUserData(req *DeleteServerUserDataRequest, opts ...scw
 type SetServerUserDataRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	ServerId string `json:"-"`
+	ServerID string `json:"-"`
 
 	Key string `json:"-"`
 
 	Content *utils.File
 }
 
-// SetServerUserData: add/Set user data
+// SetServerUserData add/Set user data
 //
 // Add or update a user data with the given key on a server
-func (s *Api) SetServerUserData(req *SetServerUserDataRequest, opts ...scw.RequestOption) error {
+func (s *API) SetServerUserData(req *SetServerUserDataRequest, opts ...scw.RequestOption) error {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "PATCH",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ServerId) + "/user_data/" + fmt.Sprint(req.Key) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ServerID) + "/user_data/" + fmt.Sprint(req.Key) + "",
 		Headers: http.Header{},
 	}
+
 	err = scwReq.SetBody(req.Content)
 	if err != nil {
 		return err
 	}
 
-	_, err = s.client.Do(scwReq, opts...)
-
+	err = s.client.Do(scwReq, nil, opts...)
 	if err != nil {
 		return err
 	}
@@ -1319,35 +1418,31 @@ func (s *Api) SetServerUserData(req *SetServerUserDataRequest, opts ...scw.Reque
 type GetServerUserDataRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	ServerId string `json:"-"`
+	ServerID string `json:"-"`
 
 	Key string `json:"-"`
 }
 
-// GetServerUserData: get user data
+// GetServerUserData get user data
 //
 // Get the content of a user data with the given key on a server
-func (s *Api) GetServerUserData(req *GetServerUserDataRequest, opts ...scw.RequestOption) (*utils.File, error) {
+func (s *API) GetServerUserData(req *GetServerUserDataRequest, opts ...scw.RequestOption) (*utils.File, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "GET",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ServerId) + "/user_data/" + fmt.Sprint(req.Key) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/servers/" + fmt.Sprint(req.ServerID) + "/user_data/" + fmt.Sprint(req.Key) + "",
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp utils.File
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1370,20 +1465,27 @@ type ListImagesRequest struct {
 	Arch *string `json:"-"`
 }
 
-// ListImages: list images
+// ListImages list images
 //
 // List all images available in an account
-func (s *Api) ListImages(req *ListImagesRequest, opts ...scw.RequestOption) (*ListImagesResponse, error) {
+func (s *API) ListImages(req *ListImagesRequest, opts ...scw.RequestOption) (*ListImagesResponse, error) {
 	var err error
 
-	val := s.client.GetDefaultOrganizationID()
-	if req.Organization == nil || *req.Organization == "" {
-		req.Organization = &val
+	defaultOrganization, exist := s.client.GetDefaultOrganizationID()
+	if (req.Organization == nil || *req.Organization == "") && exist {
+		req.Organization = &defaultOrganization
 	}
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
+
+	defaultPerPage, exist := s.client.GetDefaultPageSize()
+	if (req.PerPage == nil || *req.PerPage == 0) && exist {
+		req.PerPage = &defaultPerPage
+	}
+
 	query := url.Values{}
 	parameter.AddToQuery(query, "organization", req.Organization)
 	parameter.AddToQuery(query, "per_page", req.PerPage)
@@ -1399,14 +1501,9 @@ func (s *Api) ListImages(req *ListImagesRequest, opts ...scw.RequestOption) (*Li
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp ListImagesResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1416,33 +1513,29 @@ func (s *Api) ListImages(req *ListImagesRequest, opts ...scw.RequestOption) (*Li
 type GetImageRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	ImageId string `json:"-"`
+	ImageID string `json:"-"`
 }
 
-// GetImage: get image
+// GetImage get image
 //
 // Get details of an image with the given id
-func (s *Api) GetImage(req *GetImageRequest, opts ...scw.RequestOption) (*GetImageResponse, error) {
+func (s *API) GetImage(req *GetImageRequest, opts ...scw.RequestOption) (*GetImageResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "GET",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/images/" + fmt.Sprint(req.ImageId) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/images/" + fmt.Sprint(req.ImageID) + "",
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp GetImageResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1465,16 +1558,18 @@ type CreateImageRequest struct {
 	Public bool `json:"public,omitempty"`
 }
 
-// CreateImage: create image
-func (s *Api) CreateImage(req *CreateImageRequest, opts ...scw.RequestOption) (*CreateImageResponse, error) {
+// CreateImage create image
+func (s *API) CreateImage(req *CreateImageRequest, opts ...scw.RequestOption) (*CreateImageResponse, error) {
 	var err error
 
 	if req.Organization == "" {
-		req.Organization = s.client.GetDefaultOrganizationID()
+		defaultOrganization, _ := s.client.GetDefaultOrganizationID()
+		req.Organization = defaultOrganization
 	}
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
@@ -1482,19 +1577,15 @@ func (s *Api) CreateImage(req *CreateImageRequest, opts ...scw.RequestOption) (*
 		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/images",
 		Headers: http.Header{},
 	}
+
 	err = scwReq.SetBody(req)
 	if err != nil {
 		return nil, err
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp CreateImageResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1504,7 +1595,7 @@ func (s *Api) CreateImage(req *CreateImageRequest, opts ...scw.RequestOption) (*
 type SetImageRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	Id string `json:"-"`
+	ID string `json:"-"`
 
 	Name string `json:"name,omitempty"`
 
@@ -1529,38 +1620,36 @@ type SetImageRequest struct {
 	State ImageState `json:"state,omitempty"`
 }
 
-// SetImage: update image
+// SetImage update image
 //
 // Replace all image properties with an image message
-func (s *Api) SetImage(req *SetImageRequest, opts ...scw.RequestOption) (*SetImageResponse, error) {
+func (s *API) SetImage(req *SetImageRequest, opts ...scw.RequestOption) (*SetImageResponse, error) {
 	var err error
 
 	if req.Organization == "" {
-		req.Organization = s.client.GetDefaultOrganizationID()
+		defaultOrganization, _ := s.client.GetDefaultOrganizationID()
+		req.Organization = defaultOrganization
 	}
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "PUT",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/images/" + fmt.Sprint(req.Id) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/images/" + fmt.Sprint(req.ID) + "",
 		Headers: http.Header{},
 	}
+
 	err = scwReq.SetBody(req)
 	if err != nil {
 		return nil, err
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp SetImageResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1570,27 +1659,27 @@ func (s *Api) SetImage(req *SetImageRequest, opts ...scw.RequestOption) (*SetIma
 type DeleteImageRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	ImageId string `json:"-"`
+	ImageID string `json:"-"`
 }
 
-// DeleteImage: delete image
+// DeleteImage delete image
 //
 // Delete the image with the given id
-func (s *Api) DeleteImage(req *DeleteImageRequest, opts ...scw.RequestOption) error {
+func (s *API) DeleteImage(req *DeleteImageRequest, opts ...scw.RequestOption) error {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "DELETE",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/images/" + fmt.Sprint(req.ImageId) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/images/" + fmt.Sprint(req.ImageID) + "",
 		Headers: http.Header{},
 	}
 
-	_, err = s.client.Do(scwReq, opts...)
-
+	err = s.client.Do(scwReq, nil, opts...)
 	if err != nil {
 		return err
 	}
@@ -1609,18 +1698,25 @@ type ListSnapshotsRequest struct {
 	Name *string `json:"-"`
 }
 
-// ListSnapshots: list snapshots
-func (s *Api) ListSnapshots(req *ListSnapshotsRequest, opts ...scw.RequestOption) (*ListSnapshotsResponse, error) {
+// ListSnapshots list snapshots
+func (s *API) ListSnapshots(req *ListSnapshotsRequest, opts ...scw.RequestOption) (*ListSnapshotsResponse, error) {
 	var err error
 
-	val := s.client.GetDefaultOrganizationID()
-	if req.Organization == nil || *req.Organization == "" {
-		req.Organization = &val
+	defaultOrganization, exist := s.client.GetDefaultOrganizationID()
+	if (req.Organization == nil || *req.Organization == "") && exist {
+		req.Organization = &defaultOrganization
 	}
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
+
+	defaultPerPage, exist := s.client.GetDefaultPageSize()
+	if (req.PerPage == nil || *req.PerPage == 0) && exist {
+		req.PerPage = &defaultPerPage
+	}
+
 	query := url.Values{}
 	parameter.AddToQuery(query, "organization", req.Organization)
 	parameter.AddToQuery(query, "per_page", req.PerPage)
@@ -1634,14 +1730,9 @@ func (s *Api) ListSnapshots(req *ListSnapshotsRequest, opts ...scw.RequestOption
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp ListSnapshotsResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1651,23 +1742,25 @@ func (s *Api) ListSnapshots(req *ListSnapshotsRequest, opts ...scw.RequestOption
 type CreateSnapshotRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	VolumeId string `json:"volume_id,omitempty"`
+	VolumeID string `json:"volume_id,omitempty"`
 
 	Organization string `json:"organization,omitempty"`
 
 	Name string `json:"name,omitempty"`
 }
 
-// CreateSnapshot: create snapshot
-func (s *Api) CreateSnapshot(req *CreateSnapshotRequest, opts ...scw.RequestOption) (*CreateSnapshotResponse, error) {
+// CreateSnapshot create snapshot
+func (s *API) CreateSnapshot(req *CreateSnapshotRequest, opts ...scw.RequestOption) (*CreateSnapshotResponse, error) {
 	var err error
 
 	if req.Organization == "" {
-		req.Organization = s.client.GetDefaultOrganizationID()
+		defaultOrganization, _ := s.client.GetDefaultOrganizationID()
+		req.Organization = defaultOrganization
 	}
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
@@ -1675,19 +1768,15 @@ func (s *Api) CreateSnapshot(req *CreateSnapshotRequest, opts ...scw.RequestOpti
 		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/snapshots",
 		Headers: http.Header{},
 	}
+
 	err = scwReq.SetBody(req)
 	if err != nil {
 		return nil, err
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp CreateSnapshotResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1697,33 +1786,29 @@ func (s *Api) CreateSnapshot(req *CreateSnapshotRequest, opts ...scw.RequestOpti
 type GetSnapshotRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	SnapshotId string `json:"-"`
+	SnapshotID string `json:"-"`
 }
 
-// GetSnapshot: get snapshot
+// GetSnapshot get snapshot
 //
 // Get details of a snapshot with the given id
-func (s *Api) GetSnapshot(req *GetSnapshotRequest, opts ...scw.RequestOption) (*GetSnapshotResponse, error) {
+func (s *API) GetSnapshot(req *GetSnapshotRequest, opts ...scw.RequestOption) (*GetSnapshotResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "GET",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/snapshots/" + fmt.Sprint(req.SnapshotId) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/snapshots/" + fmt.Sprint(req.SnapshotID) + "",
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp GetSnapshotResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1733,7 +1818,7 @@ func (s *Api) GetSnapshot(req *GetSnapshotRequest, opts ...scw.RequestOption) (*
 type SetSnapshotRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	Id string `json:"-"`
+	ID string `json:"-"`
 
 	Name string `json:"name,omitempty"`
 
@@ -1752,38 +1837,36 @@ type SetSnapshotRequest struct {
 	ModificationDate time.Time `json:"modification_date,omitempty"`
 }
 
-// SetSnapshot: update snapshot
+// SetSnapshot update snapshot
 //
 // Replace all snapshot properties with a snapshot message
-func (s *Api) SetSnapshot(req *SetSnapshotRequest, opts ...scw.RequestOption) (*SetSnapshotResponse, error) {
+func (s *API) SetSnapshot(req *SetSnapshotRequest, opts ...scw.RequestOption) (*SetSnapshotResponse, error) {
 	var err error
 
 	if req.Organization == "" {
-		req.Organization = s.client.GetDefaultOrganizationID()
+		defaultOrganization, _ := s.client.GetDefaultOrganizationID()
+		req.Organization = defaultOrganization
 	}
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "PUT",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/snapshots/" + fmt.Sprint(req.Id) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/snapshots/" + fmt.Sprint(req.ID) + "",
 		Headers: http.Header{},
 	}
+
 	err = scwReq.SetBody(req)
 	if err != nil {
 		return nil, err
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp SetSnapshotResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1793,27 +1876,27 @@ func (s *Api) SetSnapshot(req *SetSnapshotRequest, opts ...scw.RequestOption) (*
 type DeleteSnapshotRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	SnapshotId string `json:"-"`
+	SnapshotID string `json:"-"`
 }
 
-// DeleteSnapshot: delete snapshot
+// DeleteSnapshot delete snapshot
 //
 // Delete the snapshot with the given id
-func (s *Api) DeleteSnapshot(req *DeleteSnapshotRequest, opts ...scw.RequestOption) error {
+func (s *API) DeleteSnapshot(req *DeleteSnapshotRequest, opts ...scw.RequestOption) error {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "DELETE",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/snapshots/" + fmt.Sprint(req.SnapshotId) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/snapshots/" + fmt.Sprint(req.SnapshotID) + "",
 		Headers: http.Header{},
 	}
 
-	_, err = s.client.Do(scwReq, opts...)
-
+	err = s.client.Do(scwReq, nil, opts...)
 	if err != nil {
 		return err
 	}
@@ -1832,18 +1915,25 @@ type ListVolumesRequest struct {
 	Name *string `json:"-"`
 }
 
-// ListVolumes: list volumes
-func (s *Api) ListVolumes(req *ListVolumesRequest, opts ...scw.RequestOption) (*ListVolumesResponse, error) {
+// ListVolumes list volumes
+func (s *API) ListVolumes(req *ListVolumesRequest, opts ...scw.RequestOption) (*ListVolumesResponse, error) {
 	var err error
 
-	val := s.client.GetDefaultOrganizationID()
-	if req.Organization == nil || *req.Organization == "" {
-		req.Organization = &val
+	defaultOrganization, exist := s.client.GetDefaultOrganizationID()
+	if (req.Organization == nil || *req.Organization == "") && exist {
+		req.Organization = &defaultOrganization
 	}
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
+
+	defaultPerPage, exist := s.client.GetDefaultPageSize()
+	if (req.PerPage == nil || *req.PerPage == 0) && exist {
+		req.PerPage = &defaultPerPage
+	}
+
 	query := url.Values{}
 	parameter.AddToQuery(query, "organization", req.Organization)
 	parameter.AddToQuery(query, "per_page", req.PerPage)
@@ -1857,14 +1947,9 @@ func (s *Api) ListVolumes(req *ListVolumesRequest, opts ...scw.RequestOption) (*
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp ListVolumesResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1902,16 +1987,18 @@ func (m *CreateVolumeRequest) GetFrom() From {
 	return nil
 }
 
-// CreateVolume: create volume
-func (s *Api) CreateVolume(req *CreateVolumeRequest, opts ...scw.RequestOption) (*CreateVolumeResponse, error) {
+// CreateVolume create volume
+func (s *API) CreateVolume(req *CreateVolumeRequest, opts ...scw.RequestOption) (*CreateVolumeResponse, error) {
 	var err error
 
 	if req.Organization == "" {
-		req.Organization = s.client.GetDefaultOrganizationID()
+		defaultOrganization, _ := s.client.GetDefaultOrganizationID()
+		req.Organization = defaultOrganization
 	}
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
@@ -1919,19 +2006,15 @@ func (s *Api) CreateVolume(req *CreateVolumeRequest, opts ...scw.RequestOption) 
 		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/volumes",
 		Headers: http.Header{},
 	}
+
 	err = scwReq.SetBody(req)
 	if err != nil {
 		return nil, err
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp CreateVolumeResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1941,33 +2024,29 @@ func (s *Api) CreateVolume(req *CreateVolumeRequest, opts ...scw.RequestOption) 
 type GetVolumeRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	VolumeId string `json:"-"`
+	VolumeID string `json:"-"`
 }
 
-// GetVolume: get volume
+// GetVolume get volume
 //
 // Get details of a volume with the given id
-func (s *Api) GetVolume(req *GetVolumeRequest, opts ...scw.RequestOption) (*GetVolumeResponse, error) {
+func (s *API) GetVolume(req *GetVolumeRequest, opts ...scw.RequestOption) (*GetVolumeResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "GET",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/volumes/" + fmt.Sprint(req.VolumeId) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/volumes/" + fmt.Sprint(req.VolumeID) + "",
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp GetVolumeResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1976,60 +2055,58 @@ func (s *Api) GetVolume(req *GetVolumeRequest, opts ...scw.RequestOption) (*GetV
 
 type SetVolumeRequest struct {
 	Zone utils.Zone `json:"-"`
-	// Id: display the volumes unique ID
-	Id string `json:"-"`
-	// Name: display the volumes names
+	// ID display the volumes unique ID
+	ID string `json:"-"`
+	// Name display the volumes names
 	Name string `json:"name,omitempty"`
-	// ExportUri: show the volumes NBD export URI
-	ExportUri string `json:"export_uri,omitempty"`
-	// Size: display the volumes disk size
+	// ExportURI show the volumes NBD export URI
+	ExportURI string `json:"export_uri,omitempty"`
+	// Size display the volumes disk size
 	Size uint64 `json:"size,omitempty"`
-	// VolumeType: display the volumes type
+	// VolumeType display the volumes type
 	VolumeType VolumeType `json:"volume_type,omitempty"`
-	// CreationDate: display the volumes creation date
+	// CreationDate display the volumes creation date
 	CreationDate time.Time `json:"creation_date,omitempty"`
-	// ModificationDate: display the volumes modification date
+	// ModificationDate display the volumes modification date
 	ModificationDate time.Time `json:"modification_date,omitempty"`
-	// Organization: display the volumes organization
+	// Organization display the volumes organization
 	Organization string `json:"organization,omitempty"`
-	// Server: display information about the server attached to the volume
+	// Server display information about the server attached to the volume
 	Server *ServerSummary `json:"server,omitempty"`
-	// State: display the volumes state
+	// State display the volumes state
 	State VolumeState `json:"state,omitempty"`
 }
 
-// SetVolume: update volume
+// SetVolume update volume
 //
 // Replace all volume properties with a volume message
-func (s *Api) SetVolume(req *SetVolumeRequest, opts ...scw.RequestOption) (*SetVolumeResponse, error) {
+func (s *API) SetVolume(req *SetVolumeRequest, opts ...scw.RequestOption) (*SetVolumeResponse, error) {
 	var err error
 
 	if req.Organization == "" {
-		req.Organization = s.client.GetDefaultOrganizationID()
+		defaultOrganization, _ := s.client.GetDefaultOrganizationID()
+		req.Organization = defaultOrganization
 	}
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "PUT",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/volumes/" + fmt.Sprint(req.Id) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/volumes/" + fmt.Sprint(req.ID) + "",
 		Headers: http.Header{},
 	}
+
 	err = scwReq.SetBody(req)
 	if err != nil {
 		return nil, err
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp SetVolumeResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2039,27 +2116,27 @@ func (s *Api) SetVolume(req *SetVolumeRequest, opts ...scw.RequestOption) (*SetV
 type DeleteVolumeRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	VolumeId string `json:"-"`
+	VolumeID string `json:"-"`
 }
 
-// DeleteVolume: delete volume
+// DeleteVolume delete volume
 //
 // Delete the volume with the given id
-func (s *Api) DeleteVolume(req *DeleteVolumeRequest, opts ...scw.RequestOption) error {
+func (s *API) DeleteVolume(req *DeleteVolumeRequest, opts ...scw.RequestOption) error {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "DELETE",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/volumes/" + fmt.Sprint(req.VolumeId) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/volumes/" + fmt.Sprint(req.VolumeID) + "",
 		Headers: http.Header{},
 	}
 
-	_, err = s.client.Do(scwReq, opts...)
-
+	err = s.client.Do(scwReq, nil, opts...)
 	if err != nil {
 		return err
 	}
@@ -2076,20 +2153,27 @@ type ListSecurityGroupsRequest struct {
 	Page *int32 `json:"-"`
 }
 
-// ListSecurityGroups: list security groups
+// ListSecurityGroups list security groups
 //
 // List all security groups available in an account
-func (s *Api) ListSecurityGroups(req *ListSecurityGroupsRequest, opts ...scw.RequestOption) (*ListSecurityGroupsResponse, error) {
+func (s *API) ListSecurityGroups(req *ListSecurityGroupsRequest, opts ...scw.RequestOption) (*ListSecurityGroupsResponse, error) {
 	var err error
 
-	val := s.client.GetDefaultOrganizationID()
-	if req.Organization == nil || *req.Organization == "" {
-		req.Organization = &val
+	defaultOrganization, exist := s.client.GetDefaultOrganizationID()
+	if (req.Organization == nil || *req.Organization == "") && exist {
+		req.Organization = &defaultOrganization
 	}
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
+
+	defaultPerPage, exist := s.client.GetDefaultPageSize()
+	if (req.PerPage == nil || *req.PerPage == 0) && exist {
+		req.PerPage = &defaultPerPage
+	}
+
 	query := url.Values{}
 	parameter.AddToQuery(query, "organization", req.Organization)
 	parameter.AddToQuery(query, "per_page", req.PerPage)
@@ -2102,14 +2186,9 @@ func (s *Api) ListSecurityGroups(req *ListSecurityGroupsRequest, opts ...scw.Req
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp ListSecurityGroupsResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2132,12 +2211,13 @@ type CreateSecurityGroupRequest struct {
 	OutboundDefaultPolicy SecurityGroupPolicy `json:"outbound_default_policy,omitempty"`
 }
 
-// CreateSecurityGroup: create security group
-func (s *Api) CreateSecurityGroup(req *CreateSecurityGroupRequest, opts ...scw.RequestOption) (*CreateSecurityGroupResponse, error) {
+// CreateSecurityGroup create security group
+func (s *API) CreateSecurityGroup(req *CreateSecurityGroupRequest, opts ...scw.RequestOption) (*CreateSecurityGroupResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
@@ -2145,19 +2225,15 @@ func (s *Api) CreateSecurityGroup(req *CreateSecurityGroupRequest, opts ...scw.R
 		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/security_groups",
 		Headers: http.Header{},
 	}
+
 	err = scwReq.SetBody(req)
 	if err != nil {
 		return nil, err
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp CreateSecurityGroupResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2167,33 +2243,29 @@ func (s *Api) CreateSecurityGroup(req *CreateSecurityGroupRequest, opts ...scw.R
 type GetSecurityGroupRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	SecurityGroupId string `json:"-"`
+	SecurityGroupID string `json:"-"`
 }
 
-// GetSecurityGroup: get security group
+// GetSecurityGroup get security group
 //
 // Get the details of a Security Group with the given id
-func (s *Api) GetSecurityGroup(req *GetSecurityGroupRequest, opts ...scw.RequestOption) (*GetSecurityGroupResponse, error) {
+func (s *API) GetSecurityGroup(req *GetSecurityGroupRequest, opts ...scw.RequestOption) (*GetSecurityGroupResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "GET",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/security_groups/" + fmt.Sprint(req.SecurityGroupId) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/security_groups/" + fmt.Sprint(req.SecurityGroupID) + "",
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp GetSecurityGroupResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2203,25 +2275,25 @@ func (s *Api) GetSecurityGroup(req *GetSecurityGroupRequest, opts ...scw.Request
 type DeleteSecurityGroupRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	SecurityGroupId string `json:"-"`
+	SecurityGroupID string `json:"-"`
 }
 
-// DeleteSecurityGroup: delete security group
-func (s *Api) DeleteSecurityGroup(req *DeleteSecurityGroupRequest, opts ...scw.RequestOption) error {
+// DeleteSecurityGroup delete security group
+func (s *API) DeleteSecurityGroup(req *DeleteSecurityGroupRequest, opts ...scw.RequestOption) error {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "DELETE",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/security_groups/" + fmt.Sprint(req.SecurityGroupId) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/security_groups/" + fmt.Sprint(req.SecurityGroupID) + "",
 		Headers: http.Header{},
 	}
 
-	_, err = s.client.Do(scwReq, opts...)
-
+	err = s.client.Do(scwReq, nil, opts...)
 	if err != nil {
 		return err
 	}
@@ -2230,64 +2302,62 @@ func (s *Api) DeleteSecurityGroup(req *DeleteSecurityGroupRequest, opts ...scw.R
 
 type SetSecurityGroupRequest struct {
 	Zone utils.Zone `json:"-"`
-	// Id: display the security groups' unique ID
-	Id string `json:"-"`
-	// Name: display the security groups name
+	// ID display the security groups' unique ID
+	ID string `json:"-"`
+	// Name display the security groups name
 	Name string `json:"name,omitempty"`
-	// Description: display the security groups description
+	// Description display the security groups description
 	Description string `json:"description,omitempty"`
-	// EnableDefaultSecurity: display if the security group is set as default
+	// EnableDefaultSecurity display if the security group is set as default
 	EnableDefaultSecurity bool `json:"enable_default_security,omitempty"`
-	// InboundDefaultPolicy: display the default inbound policy
+	// InboundDefaultPolicy display the default inbound policy
 	InboundDefaultPolicy SecurityGroupPolicy `json:"inbound_default_policy,omitempty"`
-	// OutboundDefaultPolicy: display the default outbound policy
+	// OutboundDefaultPolicy display the default outbound policy
 	OutboundDefaultPolicy SecurityGroupPolicy `json:"outbound_default_policy,omitempty"`
-	// Organization: display the security groups organization ID
+	// Organization display the security groups organization ID
 	Organization string `json:"organization,omitempty"`
-	// OrganizationDefault: display if the security group is set as organization default
+	// OrganizationDefault display if the security group is set as organization default
 	OrganizationDefault bool `json:"organization_default,omitempty"`
-	// CreationDate: display the security group creation date
+	// CreationDate display the security group creation date
 	CreationDate time.Time `json:"creation_date,omitempty"`
-	// ModificationDate: display the security group modification date
+	// ModificationDate display the security group modification date
 	ModificationDate time.Time `json:"modification_date,omitempty"`
-	// Servers: list of servers attached to this security group
+	// Servers list of servers attached to this security group
 	Servers map[string]*ServerSummary `json:"servers,omitempty"`
-	// Stateful: true if the security group is stateful
+	// Stateful true if the security group is stateful
 	Stateful bool `json:"stateful,omitempty"`
 }
 
-// SetSecurityGroup: update security group
+// SetSecurityGroup update security group
 //
 // Replace all security group properties with a security group message
-func (s *Api) SetSecurityGroup(req *SetSecurityGroupRequest, opts ...scw.RequestOption) (*UpdateSecurityGroupResponse, error) {
+func (s *API) SetSecurityGroup(req *SetSecurityGroupRequest, opts ...scw.RequestOption) (*UpdateSecurityGroupResponse, error) {
 	var err error
 
 	if req.Organization == "" {
-		req.Organization = s.client.GetDefaultOrganizationID()
+		defaultOrganization, _ := s.client.GetDefaultOrganizationID()
+		req.Organization = defaultOrganization
 	}
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "PUT",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/security_groups/" + fmt.Sprint(req.Id) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/security_groups/" + fmt.Sprint(req.ID) + "",
 		Headers: http.Header{},
 	}
+
 	err = scwReq.SetBody(req)
 	if err != nil {
 		return nil, err
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp UpdateSecurityGroupResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2297,39 +2367,41 @@ func (s *Api) SetSecurityGroup(req *SetSecurityGroupRequest, opts ...scw.Request
 type ListSecurityGroupRulesRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	SecurityGroupId string `json:"-"`
+	SecurityGroupID string `json:"-"`
 
 	PerPage *int32 `json:"-"`
 
 	Page *int32 `json:"-"`
 }
 
-// ListSecurityGroupRules: list rules
-func (s *Api) ListSecurityGroupRules(req *ListSecurityGroupRulesRequest, opts ...scw.RequestOption) (*ListSecurityGroupRulesResponse, error) {
+// ListSecurityGroupRules list rules
+func (s *API) ListSecurityGroupRules(req *ListSecurityGroupRulesRequest, opts ...scw.RequestOption) (*ListSecurityGroupRulesResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
+
+	defaultPerPage, exist := s.client.GetDefaultPageSize()
+	if (req.PerPage == nil || *req.PerPage == 0) && exist {
+		req.PerPage = &defaultPerPage
+	}
+
 	query := url.Values{}
 	parameter.AddToQuery(query, "per_page", req.PerPage)
 	parameter.AddToQuery(query, "page", req.Page)
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "GET",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/security_groups/" + fmt.Sprint(req.SecurityGroupId) + "/rules",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/security_groups/" + fmt.Sprint(req.SecurityGroupID) + "/rules",
 		Query:   query,
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp ListSecurityGroupRulesResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2339,7 +2411,7 @@ func (s *Api) ListSecurityGroupRules(req *ListSecurityGroupRulesRequest, opts ..
 type CreateSecurityGroupRuleRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	SecurityGroupId string `json:"-"`
+	SecurityGroupID string `json:"-"`
 
 	Protocol SecurityRuleProtocol `json:"protocol,omitempty"`
 
@@ -2347,7 +2419,7 @@ type CreateSecurityGroupRuleRequest struct {
 
 	Action SecurityRuleAction `json:"action,omitempty"`
 
-	IpRange string `json:"ip_range,omitempty"`
+	IPRange string `json:"ip_range,omitempty"`
 
 	DestPortFrom uint32 `json:"dest_port_from,omitempty"`
 
@@ -2358,32 +2430,29 @@ type CreateSecurityGroupRuleRequest struct {
 	Editable bool `json:"editable,omitempty"`
 }
 
-// CreateSecurityGroupRule: create rule
-func (s *Api) CreateSecurityGroupRule(req *CreateSecurityGroupRuleRequest, opts ...scw.RequestOption) (*CreateSecurityGroupRuleResponse, error) {
+// CreateSecurityGroupRule create rule
+func (s *API) CreateSecurityGroupRule(req *CreateSecurityGroupRuleRequest, opts ...scw.RequestOption) (*CreateSecurityGroupRuleResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "POST",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/security_groups/" + fmt.Sprint(req.SecurityGroupId) + "/rules",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/security_groups/" + fmt.Sprint(req.SecurityGroupID) + "/rules",
 		Headers: http.Header{},
 	}
+
 	err = scwReq.SetBody(req)
 	if err != nil {
 		return nil, err
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp CreateSecurityGroupRuleResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2393,29 +2462,29 @@ func (s *Api) CreateSecurityGroupRule(req *CreateSecurityGroupRuleRequest, opts 
 type DeleteSecurityGroupRuleRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	SecurityGroupId string `json:"-"`
+	SecurityGroupID string `json:"-"`
 
-	SecurityRuleId string `json:"-"`
+	SecurityRuleID string `json:"-"`
 }
 
-// DeleteSecurityGroupRule: delete rule
+// DeleteSecurityGroupRule delete rule
 //
 // Delete a security group rule with the given id
-func (s *Api) DeleteSecurityGroupRule(req *DeleteSecurityGroupRuleRequest, opts ...scw.RequestOption) error {
+func (s *API) DeleteSecurityGroupRule(req *DeleteSecurityGroupRuleRequest, opts ...scw.RequestOption) error {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "DELETE",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/security_groups/" + fmt.Sprint(req.SecurityGroupId) + "/rules/" + fmt.Sprint(req.SecurityRuleId) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/security_groups/" + fmt.Sprint(req.SecurityGroupID) + "/rules/" + fmt.Sprint(req.SecurityRuleID) + "",
 		Headers: http.Header{},
 	}
 
-	_, err = s.client.Do(scwReq, opts...)
-
+	err = s.client.Do(scwReq, nil, opts...)
 	if err != nil {
 		return err
 	}
@@ -2425,35 +2494,31 @@ func (s *Api) DeleteSecurityGroupRule(req *DeleteSecurityGroupRuleRequest, opts 
 type GetSecurityGroupRuleRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	SecurityGroupId string `json:"-"`
+	SecurityGroupID string `json:"-"`
 
-	SecurityRuleId string `json:"-"`
+	SecurityRuleID string `json:"-"`
 }
 
-// GetSecurityGroupRule: get rule
+// GetSecurityGroupRule get rule
 //
 // Get details of a security group rule with the given id
-func (s *Api) GetSecurityGroupRule(req *GetSecurityGroupRuleRequest, opts ...scw.RequestOption) (*GetSecurityGroupRuleResponse, error) {
+func (s *API) GetSecurityGroupRule(req *GetSecurityGroupRuleRequest, opts ...scw.RequestOption) (*GetSecurityGroupRuleResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "GET",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/security_groups/" + fmt.Sprint(req.SecurityGroupId) + "/rules/" + fmt.Sprint(req.SecurityRuleId) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/security_groups/" + fmt.Sprint(req.SecurityGroupID) + "/rules/" + fmt.Sprint(req.SecurityRuleID) + "",
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp GetSecurityGroupRuleResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2468,17 +2533,20 @@ type ListIpsRequest struct {
 	Name *string `json:"-"`
 }
 
-// ListIps: list IPs
-func (s *Api) ListIps(req *ListIpsRequest, opts ...scw.RequestOption) (*ListIpsResponse, error) {
+// ListIps list IPs
+func (s *API) ListIps(req *ListIpsRequest, opts ...scw.RequestOption) (*ListIpsResponse, error) {
 	var err error
 
 	if req.Organization == "" {
-		req.Organization = s.client.GetDefaultOrganizationID()
+		defaultOrganization, _ := s.client.GetDefaultOrganizationID()
+		req.Organization = defaultOrganization
 	}
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
+
 	query := url.Values{}
 	parameter.AddToQuery(query, "organization", req.Organization)
 	parameter.AddToQuery(query, "name", req.Name)
@@ -2490,21 +2558,16 @@ func (s *Api) ListIps(req *ListIpsRequest, opts ...scw.RequestOption) (*ListIpsR
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp ListIpsResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return &resp, nil
 }
 
-type CreateIpRequest struct {
+type CreateIPRequest struct {
 	Zone utils.Zone `json:"-"`
 
 	Organization string `json:"organization,omitempty"`
@@ -2512,16 +2575,18 @@ type CreateIpRequest struct {
 	Server *string `json:"server,omitempty"`
 }
 
-// CreateIp: reseve an IP
-func (s *Api) CreateIp(req *CreateIpRequest, opts ...scw.RequestOption) (*CreateIpResponse, error) {
+// CreateIP reseve an IP
+func (s *API) CreateIP(req *CreateIPRequest, opts ...scw.RequestOption) (*CreateIPResponse, error) {
 	var err error
 
 	if req.Organization == "" {
-		req.Organization = s.client.GetDefaultOrganizationID()
+		defaultOrganization, _ := s.client.GetDefaultOrganizationID()
+		req.Organization = defaultOrganization
 	}
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
@@ -2529,176 +2594,163 @@ func (s *Api) CreateIp(req *CreateIpRequest, opts ...scw.RequestOption) (*Create
 		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/ips",
 		Headers: http.Header{},
 	}
+
 	err = scwReq.SetBody(req)
 	if err != nil {
 		return nil, err
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
+	var resp CreateIPResponse
 
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
-	var resp CreateIpResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return &resp, nil
 }
 
-type GetIpRequest struct {
+type GetIPRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	IpId string `json:"-"`
+	IPID string `json:"-"`
 }
 
-// GetIp: get IP
+// GetIP get IP
 //
 // Get details of an IP with the given id
-func (s *Api) GetIp(req *GetIpRequest, opts ...scw.RequestOption) (*GetIpResponse, error) {
+func (s *API) GetIP(req *GetIPRequest, opts ...scw.RequestOption) (*GetIPResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "GET",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/ips/" + fmt.Sprint(req.IpId) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/ips/" + fmt.Sprint(req.IPID) + "",
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
+	var resp GetIPResponse
 
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
-	var resp GetIpResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return &resp, nil
 }
 
-type SetIpRequest struct {
+type SetIPRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	Id string `json:"-"`
+	ID string `json:"-"`
 
 	Address net.IP `json:"address,omitempty"`
 
 	Reverse string `json:"reverse,omitempty"`
 
-	Server string `json:"server,omitempty"`
+	Server *ServerSummary `json:"server,omitempty"`
 
 	Organization string `json:"organization,omitempty"`
 }
 
-func (s *Api) SetIp(req *SetIpRequest, opts ...scw.RequestOption) (*SetIpResponse, error) {
+func (s *API) SetIP(req *SetIPRequest, opts ...scw.RequestOption) (*SetIPResponse, error) {
 	var err error
 
 	if req.Organization == "" {
-		req.Organization = s.client.GetDefaultOrganizationID()
+		defaultOrganization, _ := s.client.GetDefaultOrganizationID()
+		req.Organization = defaultOrganization
 	}
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "PUT",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/ips/" + fmt.Sprint(req.Id) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/ips/" + fmt.Sprint(req.ID) + "",
 		Headers: http.Header{},
 	}
+
 	err = scwReq.SetBody(req)
 	if err != nil {
 		return nil, err
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
+	var resp SetIPResponse
 
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
-	var resp SetIpResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return &resp, nil
 }
 
-type UpdateIpRequest struct {
+type updateIPRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	IpId string `json:"-"`
+	IPID string `json:"-"`
 
-	Reverse *string `json:"reverse,omitempty"`
+	Reverse **string `json:"reverse,omitempty"`
 
-	Server *string `json:"server,omitempty"`
+	Server **string `json:"server,omitempty"`
 }
 
-// UpdateIp: update IP
-func (s *Api) UpdateIp(req *UpdateIpRequest, opts ...scw.RequestOption) (*UpdateIpResponse, error) {
+// updateIP update IP
+func (s *API) updateIP(req *updateIPRequest, opts ...scw.RequestOption) (*UpdateIPResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "PATCH",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/ips/" + fmt.Sprint(req.IpId) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/ips/" + fmt.Sprint(req.IPID) + "",
 		Headers: http.Header{},
 	}
+
 	err = scwReq.SetBody(req)
 	if err != nil {
 		return nil, err
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
+	var resp UpdateIPResponse
 
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
-	var resp UpdateIpResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return &resp, nil
 }
 
-type DeleteIpRequest struct {
+type DeleteIPRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	IpId string `json:"-"`
+	IPID string `json:"-"`
 }
 
-// DeleteIp: delete IP
+// DeleteIP delete IP
 //
 // Delete the IP with the given id
-func (s *Api) DeleteIp(req *DeleteIpRequest, opts ...scw.RequestOption) error {
+func (s *API) DeleteIP(req *DeleteIPRequest, opts ...scw.RequestOption) error {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "DELETE",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/ips/" + fmt.Sprint(req.IpId) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/ips/" + fmt.Sprint(req.IPID) + "",
 		Headers: http.Header{},
 	}
 
-	_, err = s.client.Do(scwReq, opts...)
-
+	err = s.client.Do(scwReq, nil, opts...)
 	if err != nil {
 		return err
 	}
@@ -2717,13 +2769,15 @@ type ListBootscriptsRequest struct {
 	Public *bool `json:"-"`
 }
 
-// ListBootscripts: list bootscripts
-func (s *Api) ListBootscripts(req *ListBootscriptsRequest, opts ...scw.RequestOption) (*ListBootscriptsResponse, error) {
+// ListBootscripts list bootscripts
+func (s *API) ListBootscripts(req *ListBootscriptsRequest, opts ...scw.RequestOption) (*ListBootscriptsResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
+
 	query := url.Values{}
 	parameter.AddToQuery(query, "arch", req.Arch)
 	parameter.AddToQuery(query, "title", req.Title)
@@ -2737,14 +2791,9 @@ func (s *Api) ListBootscripts(req *ListBootscriptsRequest, opts ...scw.RequestOp
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp ListBootscriptsResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2754,33 +2803,29 @@ func (s *Api) ListBootscripts(req *ListBootscriptsRequest, opts ...scw.RequestOp
 type GetBootscriptRequest struct {
 	Zone utils.Zone `json:"-"`
 
-	BootscriptId string `json:"-"`
+	BootscriptID string `json:"-"`
 }
 
-// GetBootscript: get bootscripts
+// GetBootscript get bootscripts
 //
 // Get details of a bootscript with the given id
-func (s *Api) GetBootscript(req *GetBootscriptRequest, opts ...scw.RequestOption) (*GetBootscriptResponse, error) {
+func (s *API) GetBootscript(req *GetBootscriptRequest, opts ...scw.RequestOption) (*GetBootscriptResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
 		Method:  "GET",
-		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/bootscripts/" + fmt.Sprint(req.BootscriptId) + "",
+		Path:    "/instance/v1/zones/" + fmt.Sprint(req.Zone) + "/bootscripts/" + fmt.Sprint(req.BootscriptID) + "",
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp GetBootscriptResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2791,11 +2836,12 @@ type GetServiceInfoRequest struct {
 	Zone utils.Zone `json:"-"`
 }
 
-func (s *Api) GetServiceInfo(req *GetServiceInfoRequest, opts ...scw.RequestOption) (*GetServiceInfoResponse, error) {
+func (s *API) GetServiceInfo(req *GetServiceInfoRequest, opts ...scw.RequestOption) (*GetServiceInfoResponse, error) {
 	var err error
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
 
 	scwReq := &scw.ScalewayRequest{
@@ -2804,14 +2850,9 @@ func (s *Api) GetServiceInfo(req *GetServiceInfoRequest, opts ...scw.RequestOpti
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp GetServiceInfoResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2824,17 +2865,19 @@ type GetDashboardRequest struct {
 	Organization *string `json:"-"`
 }
 
-func (s *Api) GetDashboard(req *GetDashboardRequest, opts ...scw.RequestOption) (*GetDashboardResponse, error) {
+func (s *API) GetDashboard(req *GetDashboardRequest, opts ...scw.RequestOption) (*GetDashboardResponse, error) {
 	var err error
 
-	val := s.client.GetDefaultOrganizationID()
-	if req.Organization == nil || *req.Organization == "" {
-		req.Organization = &val
+	defaultOrganization, exist := s.client.GetDefaultOrganizationID()
+	if (req.Organization == nil || *req.Organization == "") && exist {
+		req.Organization = &defaultOrganization
 	}
 
 	if req.Zone == "" {
-		req.Zone = s.client.GetDefaultZone()
+		defaultZone, _ := s.client.GetDefaultZone()
+		req.Zone = defaultZone
 	}
+
 	query := url.Values{}
 	parameter.AddToQuery(query, "organization", req.Organization)
 
@@ -2845,14 +2888,9 @@ func (s *Api) GetDashboard(req *GetDashboardRequest, opts ...scw.RequestOption) 
 		Headers: http.Header{},
 	}
 
-	scwResp, err := s.client.Do(scwReq, opts...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer scwResp.Body.Close()
 	var resp GetDashboardResponse
-	err = json.NewDecoder(scwResp.Body).Decode(&resp)
+
+	err = s.client.Do(scwReq, &resp, opts...)
 	if err != nil {
 		return nil, err
 	}

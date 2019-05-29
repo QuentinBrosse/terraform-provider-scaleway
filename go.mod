@@ -5,7 +5,6 @@ require (
 	github.com/hashicorp/terraform v0.12.0
 	github.com/mitchellh/go-homedir v1.0.0
 	github.com/nicolai86/scaleway-sdk v0.0.0-20181024210327-b20018e944c4
-	github.com/scaleway/scaleway-sdk-go v0.0.0-20190515170301-576e6e677683
-	github.com/smartystreets/goconvey v0.0.0-20190222223459-a17d461953aa // indirect
+	github.com/scaleway/scaleway-sdk-go v0.0.0-20190528104254-ef1cf069399e
 	golang.org/x/crypto v0.0.0-20190426145343-a29dc8fdc734
 )

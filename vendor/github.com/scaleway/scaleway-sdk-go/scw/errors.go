@@ -1,9 +1,7 @@
 package scw
 
 import (
-	"encoding/json"
 	"fmt"
-	"net/http"
 )
 
 // ResponseError is an error type for the Scaleway API
@@ -19,43 +17,21 @@ type ResponseError struct {
 
 	// StatusCode is the HTTP status code received
 	StatusCode int `json:"-"`
-}
 
-func hasResponseError(res *http.Response) error {
-	if res.StatusCode >= 200 && res.StatusCode <= 299 {
-		return nil
-	}
-	newErr := &ResponseError{
-		StatusCode: res.StatusCode,
-	}
-
-	if res.Body == nil {
-		return newErr
-	}
-
-	decoder := json.NewDecoder(res.Body)
-	defer res.Body.Close()
-	err := decoder.Decode(newErr)
-	if err != nil {
-		return err
-	}
-
-	return newErr
+	// Status is the HTTP status received
+	Status string `json:"-"`
 }
 
 func (e *ResponseError) Error() string {
-	s := fmt.Sprintf("received status code %d", e.StatusCode)
-
-	if e.Type != "" {
-		s = fmt.Sprintf("%s: error type is %s", s, e.Type)
-	}
+	s := fmt.Sprintf("scaleway-sdk-go: http error %s", e.Status)
 
 	if e.Message != "" {
 		s = fmt.Sprintf("%s: %s", s, e.Message)
 	}
 
 	if len(e.Fields) > 0 {
-		s = fmt.Sprintf("%s: details: %v", s, e.Fields)
+		s = fmt.Sprintf("%s: %v", s, e.Fields)
 	}
+
 	return s
 }

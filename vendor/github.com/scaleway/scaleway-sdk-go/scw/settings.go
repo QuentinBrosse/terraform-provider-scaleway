@@ -2,7 +2,6 @@ package scw
 
 import (
 	"fmt"
-	"net/http"
 	"net/url"
 
 	"github.com/scaleway/scaleway-sdk-go/internal/auth"
@@ -13,11 +12,12 @@ type settings struct {
 	apiURL                string
 	token                 auth.Auth
 	userAgent             string
-	httpClient            *http.Client
+	httpClient            httpClient
 	insecure              bool
-	defaultOrganizationID string
-	defaultRegion         utils.Region
-	defaultZone           utils.Zone
+	defaultOrganizationID *string
+	defaultRegion         *utils.Region
+	defaultZone           *utils.Zone
+	defaultPageSize       *int32
 }
 
 func newSettings() *settings {
@@ -28,7 +28,6 @@ func (s *settings) apply(opts []ClientOption) {
 	for _, opt := range opts {
 		opt(s)
 	}
-
 }
 
 func (s *settings) validate() error {
@@ -40,6 +39,25 @@ func (s *settings) validate() error {
 	_, err = url.Parse(s.apiURL)
 	if err != nil {
 		return fmt.Errorf("invalid url %s: %s", s.apiURL, err)
+	}
+
+	// TODO: Check OrganizationID format
+	if s.defaultOrganizationID != nil && *s.defaultOrganizationID == "" {
+		return fmt.Errorf("default organization id cannot be empty")
+	}
+
+	// TODO: Check Region format
+	if s.defaultRegion != nil && *s.defaultRegion == "" {
+		return fmt.Errorf("default region cannot be empty")
+	}
+
+	// TODO: Check Zone format
+	if s.defaultZone != nil && *s.defaultZone == "" {
+		return fmt.Errorf("default zone cannot be empty")
+	}
+
+	if s.defaultPageSize != nil && *s.defaultPageSize <= 0 {
+		return fmt.Errorf("default page size cannot be <= 0")
 	}
 
 	return nil
