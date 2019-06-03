@@ -84,7 +84,7 @@ func (c *Config) GetScwClient() (*scw.Client, error) {
 
 	// The access key is not used for API authentications.
 	if c.SecretKey != "" {
-		options = append(options, scw.WithAuth("", c.SecretKey))
+		options = append(options, scw.WithAuth(c.AccessKey, c.SecretKey))
 	}
 
 	if c.DefaultProjectID != "" {

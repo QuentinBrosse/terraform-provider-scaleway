@@ -2,7 +2,6 @@ package scaleway
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"sync"
 
@@ -38,7 +37,7 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.SchemaDefaultFunc(func() (interface{}, error) {
 					// Keep the deprecated behavior
 					if accessKey := os.Getenv("SCALEWAY_ACCESS_KEY"); accessKey != "" {
-						log.Printf("[WARN] SCALEWAY_ACCESS_KEY is deprecated, please use SCW_ACCESS_KEY instead")
+						l.Warningf("SCALEWAY_ACCESS_KEY is deprecated, please use SCW_ACCESS_KEY instead")
 						return accessKey, nil
 					}
 					if accessKey, exist := scwConfig.GetAccessKey(); exist {
@@ -79,7 +78,7 @@ func Provider() terraform.ResourceProvider {
 					// Keep the deprecated behavior
 					// Note: The deprecated region format conversion is handled in `config.GetDeprecatedClient`.
 					if region := os.Getenv("SCALEWAY_REGION"); region != "" {
-						log.Printf("[WARN] SCALEWAY_REGION is deprecated, please use SCW_DEFAULT_REGION instead")
+						l.Warningf("SCALEWAY_REGION is deprecated, please use SCW_DEFAULT_REGION instead")
 						return region, nil
 					}
 					if defaultRegion, exist := scwConfig.GetDefaultRegion(); exist {
@@ -109,7 +108,7 @@ func Provider() terraform.ResourceProvider {
 					// Keep the deprecated behavior
 					for _, k := range []string{"SCALEWAY_TOKEN", "SCALEWAY_ACCESS_KEY"} {
 						if os.Getenv(k) != "" {
-							log.Printf("[WARN] %s is deprecated, please use SCW_SECRET_KEY instead", k)
+							l.Warningf("%s is deprecated, please use SCW_SECRET_KEY instead", k)
 							return os.Getenv(k), nil
 						}
 					}
@@ -117,7 +116,7 @@ func Provider() terraform.ResourceProvider {
 						scwAPIKey, _, err := readDeprecatedScalewayConfig(path)
 						if err != nil {
 							// No error is returned here to allow user to use `secret_key`.
-							log.Printf("[ERROR] cannot parse deprecated config file: %s", err)
+							l.Errorf("cannot parse deprecated config file: %s", err)
 							return nil, nil
 						}
 						// Depreciation log is already handled by scwconfig.
@@ -134,14 +133,14 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.SchemaDefaultFunc(func() (interface{}, error) {
 					// Keep the deprecated behavior
 					if organization := os.Getenv("SCALEWAY_ORGANIZATION"); organization != "" {
-						log.Printf("[WARN] SCALEWAY_ORGANIZATION is deprecated, please use SCW_DEFAULT_ORGANIZATION_ID instead")
+						l.Warningf("SCALEWAY_ORGANIZATION is deprecated, please use SCW_DEFAULT_ORGANIZATION_ID instead")
 						return organization, nil
 					}
 					if path, err := homedir.Expand("~/.scwrc"); err == nil {
 						_, scwOrganization, err := readDeprecatedScalewayConfig(path)
 						if err != nil {
 							// No error is returned here to allow user to use `organization_id`.
-							log.Printf("[ERROR] cannot parse deprecated config file: %s", err)
+							l.Errorf("cannot parse deprecated config file: %s", err)
 							return nil, nil
 						}
 						return scwOrganization, nil
@@ -180,15 +179,21 @@ func Provider() terraform.ResourceProvider {
 // providerConfigure creates the Meta object containing the SDK client.
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	apiKey := ""
-	if v, ok := d.Get("token").(string); ok {
+	if v, ok := d.Get("secret_key").(string); ok {
+		apiKey = v
+	} else if v, ok := d.Get("token").(string); ok {
 		apiKey = v
 	} else {
 		if v, ok := d.Get("access_key").(string); ok {
+			l.Warningf("you seem to use the access_key instead of secret_key in the provider. This bogus behavior is deprecated, please use the `secret_key` field instead.")
 			apiKey = v
 		}
 	}
 
-	organization := d.Get("organization").(string)
+	organization := d.Get("organization_id").(string)
+	if organization == "" {
+		organization = d.Get("organization").(string)
+	}
 
 	if apiKey == "" {
 		if path, err := homedir.Expand("~/.scwrc"); err == nil {
@@ -201,10 +206,22 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		}
 	}
 
+	region, err := utils.ParseRegion(d.Get("region").(string))
+	if err != nil {
+		return nil, err
+	}
+
+	zone, err := utils.ParseZone(d.Get("zone").(string))
+	if err != nil {
+		return nil, err
+	}
+
 	config := Config{
-		DefaultProjectID: organization,
+		AccessKey:        d.Get("access_key").(string),
 		SecretKey:        apiKey,
-		DefaultRegion:    utils.Region(d.Get("region").(string)),
+		DefaultProjectID: organization,
+		DefaultRegion:    region,
+		DefaultZone:      zone,
 	}
 
 	return config.Meta()
