@@ -24,8 +24,7 @@ func dataSourceScalewayRegistryNamespaceBeta() *schema.Resource {
 	}
 
 	return &schema.Resource{
-		Read: dataSourceScalewayRegistryNamespaceReadBeta,
-
+		Read:   dataSourceScalewayRegistryNamespaceReadBeta,
 		Schema: dsSchema,
 	}
 }
