@@ -1,8 +1,10 @@
 package scaleway
 
 import (
+	"fmt"
 	"regexp"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	domain "github.com/scaleway/scaleway-sdk-go/api/domain/v2alpha2"
 	"github.com/scaleway/scaleway-sdk-go/scw"
@@ -25,8 +27,9 @@ func resourceScalewayDomainDNSRecords() *schema.Resource {
 				Required: true,
 			},
 			"records": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Optional: true,
+				Set:      recordHash,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -66,7 +69,8 @@ func resourceScalewayDomainDNSRecordsCreate(d *schema.ResourceData, m interface{
 	domainAPI := domain.NewAPI(meta.scwClient)
 
 	recordsToAdd := []*domain.Record(nil)
-	for _, item := range d.Get("records").([]interface{}) {
+	recordsSet := d.Get("records").(*schema.Set)
+	for _, item := range recordsSet.List() {
 		recordsToAdd = append(recordsToAdd, expandDomainDNSRecords(item))
 	}
 
@@ -116,7 +120,7 @@ func resourceScalewayDomainDNSRecordsRead(d *schema.ResourceData, m interface{})
 	}
 
 	_ = d.Set("dns_zone", d.Id())
-	_ = d.Set("records", stateRecords)
+	_ = d.Set("records", schema.NewSet(recordHash, stateRecords))
 
 	return nil
 }
@@ -138,6 +142,11 @@ func resourceScalewayDomainDNSRecordsDelete(d *schema.ResourceData, m interface{
 	}
 
 	return nil
+}
+
+func recordHash(v interface{}) int {
+	userData := v.(map[string]interface{})
+	return hashcode.String(fmt.Sprintf("%s%s%s%d", userData["name"], userData["type"], userData["data"], userData["ttl"]))
 }
 
 func expandDomainDNSRecords(i interface{}) *domain.Record {
