@@ -8,6 +8,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"time"
@@ -66,7 +67,7 @@ func (m *Meta) bootstrap() error {
 // bootstrapScwClient initializes a new scw.Client from the configuration.
 func (m *Meta) bootstrapScwClient() error {
 	options := []scw.ClientOption{
-		scw.WithHTTPClient(createRetryableHTTPClient(false)),
+		scw.WithHTTPClient(createRetryableHTTPClient2()),
 		scw.WithUserAgent(fmt.Sprintf("terraform-provider/%s terraform/%s", version, m.TerraformVersion)),
 	}
 
@@ -94,6 +95,58 @@ func (m *Meta) bootstrapScwClient() error {
 
 	m.scwClient = client
 	return nil
+}
+
+type transport struct {
+	*http.Transport
+}
+
+func isHttpCodeRetryable(httpCode int) bool {
+	switch httpCode {
+	case http.StatusTooManyRequests, http.StatusInternalServerError:
+		return true
+	}
+	return false
+}
+
+func (t *transport) RoundTrip(req *http.Request) (*http.Response, error) {
+	body := io.ReadSeeker(nil)
+	if req.Body != nil {
+		bs, err := ioutil.ReadAll(req.Body)
+		if err != nil {
+			return nil, err
+		}
+		body = bytes.NewReader(bs)
+		req.Body = ioutil.NopCloser(body)
+	}
+
+	res, err := t.Transport.RoundTrip(req)
+
+	retry := 0
+	for retry < 10 && (err != nil || isHttpCodeRetryable(res.StatusCode)) {
+		time.Sleep(3 * time.Second)
+		l.Debugf("RECEIVED 429")
+		if body != nil {
+			body.Seek(0, io.SeekStart)
+		}
+		res, err = t.Transport.RoundTrip(req)
+		retry++
+	}
+	return res, err
+}
+
+func createRetryableHTTPClient2() *http.Client {
+	return &http.Client{
+		Timeout: 60 * time.Second,
+		Transport: &transport{
+			Transport: &http.Transport{
+				DialContext:           (&net.Dialer{Timeout: 5 * time.Second}).DialContext,
+				TLSHandshakeTimeout:   5 * time.Second,
+				ResponseHeaderTimeout: 30 * time.Second,
+				MaxIdleConnsPerHost:   20,
+			},
+		},
+	}
 }
 
 // createRetryableHTTPClient creates a retryablehttp.Client.
