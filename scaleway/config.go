@@ -124,7 +124,7 @@ func (t *transport) RoundTrip(req *http.Request) (*http.Response, error) {
 
 	retry := 0
 	for retry < 10 && (err != nil || isHttpCodeRetryable(res.StatusCode)) {
-		time.Sleep(1 * time.Second)
+		time.Sleep(3 * time.Second)
 		l.Debugf("RECEIVED 429")
 		if body != nil {
 			body.Seek(0, io.SeekStart)
