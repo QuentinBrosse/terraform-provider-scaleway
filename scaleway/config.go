@@ -1,18 +1,24 @@
 package scaleway
 
 import (
+	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
+	"log"
 	"net"
 	"net/http"
 	"os"
-	"sync"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/hashicorp/go-retryablehttp"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/logging"
 	sdk "github.com/nicolai86/scaleway-sdk"
 	"github.com/scaleway/scaleway-sdk-go/scw"
 )
@@ -61,7 +67,7 @@ func (m *Meta) bootstrap() error {
 // bootstrapScwClient initializes a new scw.Client from the configuration.
 func (m *Meta) bootstrapScwClient() error {
 	options := []scw.ClientOption{
-		scw.WithHTTPClient(createRetryableHTTPClient(false)),
+		scw.WithHTTPClient(createRetryableHTTPClient2()),
 		scw.WithUserAgent(fmt.Sprintf("terraform-provider/%s terraform/%s", version, m.TerraformVersion)),
 	}
 
@@ -91,33 +97,102 @@ func (m *Meta) bootstrapScwClient() error {
 	return nil
 }
 
-// createRetryableHTTPClient creates a retryablehttp.Client.
-func createRetryableHTTPClient(shouldLog bool) *client {
-	cc := http.Client{
-		Timeout: 30 * time.Second,
-		Transport: &http.Transport{
-			DialContext:           (&net.Dialer{Timeout: 5 * time.Second}).DialContext,
-			TLSHandshakeTimeout:   5 * time.Second,
-			ResponseHeaderTimeout: 30 * time.Second,
-			MaxIdleConnsPerHost:   20,
+type transport struct {
+	*http.Transport
+}
+
+func isHttpCodeRetryable(httpCode int) bool {
+	switch httpCode {
+	case http.StatusTooManyRequests, http.StatusInternalServerError:
+		return true
+	}
+	return false
+}
+
+func (t *transport) RoundTrip(req *http.Request) (*http.Response, error) {
+	body := io.ReadSeeker(nil)
+	if req.Body != nil {
+		bs, err := ioutil.ReadAll(req.Body)
+		if err != nil {
+			return nil, err
+		}
+		body = bytes.NewReader(bs)
+		req.Body = ioutil.NopCloser(body)
+	}
+
+	res, err := t.Transport.RoundTrip(req)
+
+	retry := 0
+	for retry < 10 && (err != nil || isHttpCodeRetryable(res.StatusCode)) {
+		time.Sleep(1 * time.Second)
+		l.Debugf("RECEIVED 429")
+		if body != nil {
+			body.Seek(0, io.SeekStart)
+		}
+		res, err = t.Transport.RoundTrip(req)
+		retry++
+	}
+	return res, err
+}
+
+func createRetryableHTTPClient2() *http.Client {
+	return &http.Client{
+		Timeout: 60 * time.Second,
+		Transport: &transport{
+			Transport: &http.Transport{
+				DialContext:           (&net.Dialer{Timeout: 5 * time.Second}).DialContext,
+				TLSHandshakeTimeout:   5 * time.Second,
+				ResponseHeaderTimeout: 30 * time.Second,
+				MaxIdleConnsPerHost:   20,
+			},
 		},
 	}
-	return &client{cc}
+}
+
+// createRetryableHTTPClient creates a retryablehttp.Client.
+func createRetryableHTTPClient(shouldLog bool) *client {
+	c := retryablehttp.NewClient()
+
+	if shouldLog {
+		c.HTTPClient.Transport = logging.NewTransport("Scaleway", c.HTTPClient.Transport)
+	}
+	c.RetryMax = 3
+	c.RetryWaitMax = 2 * time.Minute
+	c.Logger = log.New(os.Stderr, "", 0)
+	c.RetryWaitMin = time.Second * 2
+	c.CheckRetry = func(_ context.Context, resp *http.Response, err error) (bool, error) {
+		if resp == nil || resp.StatusCode == http.StatusTooManyRequests {
+			return true, err
+		}
+		return retryablehttp.DefaultRetryPolicy(context.TODO(), resp, err)
+	}
+
+	return &client{c}
 }
 
 // client is a bridge between scw.httpClient interface and retryablehttp.Client
 type client struct {
-	http.Client
+	*retryablehttp.Client
 }
-
-var dirtyFixLock = sync.Mutex{}
 
 // Do wraps calling an HTTP method with retries.
 func (c *client) Do(r *http.Request) (*http.Response, error) {
-	// DIRTY FIX
-	dirtyFixLock.Lock()
-	defer dirtyFixLock.Unlock()
-	return c.Client.Do(r)
+	var body io.ReadSeeker
+	if r.Body != nil {
+		bs, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			return nil, err
+		}
+		body = bytes.NewReader(bs)
+	}
+	req, err := retryablehttp.NewRequest(r.Method, r.URL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+	for key, val := range r.Header {
+		req.Header.Set(key, val[0])
+	}
+	return c.Client.Do(req)
 }
 
 // bootstrapDeprecatedClient initializes a new deprecated client from the configuration.
