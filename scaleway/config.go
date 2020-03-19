@@ -114,6 +114,8 @@ func createRetryableHTTPClient(shouldLog bool) *client {
 		return retryablehttp.DefaultRetryPolicy(context.TODO(), resp, err)
 	}
 
+	c.HTTPClient.Timeout = 30 * time.Second
+
 	return &client{c}
 }
 
