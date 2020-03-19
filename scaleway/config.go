@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -124,6 +125,8 @@ type client struct {
 	*retryablehttp.Client
 }
 
+var dirtyFixLock = sync.Mutex{}
+
 // Do wraps calling an HTTP method with retries.
 func (c *client) Do(r *http.Request) (*http.Response, error) {
 	var body io.ReadSeeker
@@ -141,6 +144,11 @@ func (c *client) Do(r *http.Request) (*http.Response, error) {
 	for key, val := range r.Header {
 		req.Header.Set(key, val[0])
 	}
+
+	// DIRTY FIX
+	dirtyFixLock.Lock()
+	defer dirtyFixLock.Unlock()
+
 	return c.Client.Do(req)
 }
 
